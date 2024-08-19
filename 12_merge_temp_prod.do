@@ -102,8 +102,10 @@ use "$data/raw/hourly_productivity.dta", clear
 	egen count_hours = sum(one), by (pid day_in_study)
 
 	
-	collapse (mean) m_mistakes_number heat_index m_total_entries m_correct_entries m_quality_output m_typing_time temperature_c fraction_high count_hours (firstnm) date day month year day_type (sum) quality_output performance_earnings attendance_earnings typing_time correct_entries voluntary_pause mistakes_number total_entries mistakes_per_entries_00, by(pid day_in_study)
+	// INFO: I added time_india to be preserved here because it is used in the productivity do files
+	collapse (mean) m_mistakes_number heat_index m_total_entries m_correct_entries m_quality_output m_typing_time temperature_c fraction_high count_hours (firstnm) date day month year day_type (sum) quality_output performance_earnings attendance_earnings typing_time correct_entries voluntary_pause mistakes_number total_entries mistakes_per_entries_00, by(pid day_in_study time_india)
 	
+	label var temperature_c "Temprature (Celsius)"
 
 save "$data/generated/hi_analysis_hourly.dta", replace 
 	

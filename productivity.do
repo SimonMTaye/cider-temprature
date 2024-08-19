@@ -2,87 +2,85 @@
 
 	* productivity at hourly level
 	
-	use "$dir/01. Raw Data/Productivity/hi_analysis_hourly.dta", clear 
+	use "$data/generated/hi_analysis_hourly.dta", clear 
 	
 	
 	// productivity table at hourly level 
-	
-	cd "/Users/isadorafrankenthal/Dropbox/Temperature/Data/2. Main Study" 
-	set scheme eop
+	*set scheme eop
 
 	
 	reghdfe quality_output temperature_c, absorb(pid day_in_study time_india month#year) cluster(pid)
 	summ quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_hourly.xls", addstat("mean", r(mean), "sd", r(sd)) replace 
+	outreg2 using "$output/tables/prod_hourly_0.xls", addstat("mean", r(mean), "sd", r(sd)) replace 
 	
 	reghdfe total_entries temperature_c, absorb(pid day_in_study time_india month#year) cluster(pid)
 	summ total_entries if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_hourly.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_hourly_1.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe typing_time temperature_c, absorb(pid day_in_study time_india month#year) cluster(pid)
 	summ typing_time if e(sample) == 1
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_hourly.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_hourly_2.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe mistakes_number temperature_c, absorb(pid day_in_study time_india month#year) cluster(pid)
 	summ mistakes_number if e(sample) == 1
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_hourly.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_hourly_3.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe performance_earnings temperature_c, absorb(pid day_in_study time_india month#year) cluster(pid)
 	summ performance_earnings if e(sample) == 1
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_hourly.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_hourly_4.xls", addstat("mean", r(mean), "sd", r(sd))
 
 
 	
 	
 	// productivity at daily level 
 	
-	use "$dir/01. Raw Data/Productivity/hi_analysis_daily.dta", clear 
+	use "$data/generated/hi_analysis_daily.dta", clear 
 	
 	
 	* average productivity per hour 
 
 	reghdfe m_quality_output temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av.xls", addstat("mean", r(mean), "sd", r(sd)) replace
+	outreg2 using "$output/tables/prod_daily_av_0.xls", addstat("mean", r(mean), "sd", r(sd)) replace
 	
 	reghdfe m_total_entries temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_total_entries if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_1.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe m_typing_time temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_typing_time if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_2.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe m_mistakes_number temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_mistakes_number if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_3.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe performance_earnings_hr temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ performance_earnings_hr if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_4.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	
 	* average productivity per hour with pollution 
 
 	reghdfe m_quality_output temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av_pollution.xls", addstat("mean", r(mean), "sd", r(sd)) replace
+	outreg2 using "$output/tables/prod_daily_av_pollution_0.xls", addstat("mean", r(mean), "sd", r(sd)) replace
 	
 	reghdfe m_total_entries temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_total_entries if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av_pollution.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_pollution_1.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe m_typing_time temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_typing_time if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av_pollution.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_pollution_2.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe m_mistakes_number temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_mistakes_number if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av_pollution.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_pollution_3.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe performance_earnings_hr temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
 	summ performance_earnings_hr if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av_pollution.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_pollution_4.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	
 	
@@ -91,23 +89,23 @@
 	
 	reghdfe quality_output temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ quality_output if e(sample) == 1 
- 	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_sum.xls", addstat("mean", r(mean), "sd", r(sd)) replace
+ 	outreg2 using "$output/tables/prod_daily_sum.xls_0", addstat("mean", r(mean), "sd", r(sd)) replace
 	
 	reghdfe total_entries temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ total_entries if e(sample) == 1 
- 	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_sum.xls", addstat("mean", r(mean), "sd", r(sd))
+ 	outreg2 using "$output/tables/prod_daily_sum_1.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe typing_time temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ typing_time if e(sample) == 1 
- 	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_sum.xls", addstat("mean", r(mean), "sd", r(sd))
+ 	outreg2 using "$output/tables/prod_daily_sum_2.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe mistakes_number temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ mistakes_number if e(sample) == 1 
- 	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_sum.xls", addstat("mean", r(mean), "sd", r(sd))
+ 	outreg2 using "$output/tables/prod_daily_sum_3.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe performance_earnings temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ performance_earnings if e(sample) == 1 
- 	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_sum.xls", addstat("mean", r(mean), "sd", r(sd))
+ 	outreg2 using "$output/tables/prod_daily_sum_4.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	
 	
@@ -116,23 +114,23 @@
 
 	reghdfe m_quality_output heat_index, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av_hi.xls", addstat("mean", r(mean), "sd", r(sd)) replace
+	outreg2 using "$output/tables/prod_daily_av_hi_0.xls", addstat("mean", r(mean), "sd", r(sd)) replace
 	
 	reghdfe m_total_entries heat_index, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_total_entries if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av_hi.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_hi_1.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe m_typing_time heat_index, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_typing_time if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av_hi.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_hi_2.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe m_mistakes_number heat_index, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_mistakes_number if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av_hi.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_hi_3.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe performance_earnings_hr heat_index, absorb(pid day_in_study month#year) cluster(pid)
 	summ performance_earnings_hr if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/prod_daily_av_hi.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/prod_daily_av_hi_4.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 
 	
@@ -179,7 +177,7 @@
 	gen x_2 = _n if _n<5
 	graph bar beta_2, over(temps_2)
 	twoway (rcap ci_up_2 ci_down_2 x_2, color(emerald))(scatter beta_2 x_2, mcolor(emerald)) , ytitle("Coefficient Estimate") legend(off) yline(0,lcolor(black) lpattern(dash)) xtitle(" ") xscale(r(0.7 4.2) titlegap(4)) xlabel(1 "Under 27°C" 2 "27-29.75°C" 3 "29.75-33.45°C" 4 "Above 33.45°C") xtitle("Temperature Quartiles") yscale(r(-110(50)100) titlegap(-1.5)) ylabel(-100(50)100) plotregion(margin(right)) 
-	graph export "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/formatted/nonlinear_av_hourly_day_temp.pdf", replace
+	graph export "$output/figures/nonlinear_av_hourly_day_temp.pdf", replace
 	
 	
 	

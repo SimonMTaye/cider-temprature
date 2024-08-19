@@ -2,9 +2,7 @@
 // 	* Learning
 
 	clear all 
-	global dir "/Users/isadorafrankenthal/Dropbox/Temperature/Data/2. Main Study" 
-
-	use "$dir/01. Raw Data/Productivity/hi_analysis_daily.dta", clear 
+	use "$data/generated/hi_analysis_daily.dta", clear 
 
 	* learning for quality output 
 	
@@ -36,15 +34,15 @@
 	
 	reghdfe m_quality_output day_in_study, absorb(pid month#year) cluster(pid) 
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/proof_learning.xls", addstat("mean", r(mean), "sd", r(sd)) replace
+	outreg2 using "$output/tables/proof_learning_0.xls", addstat("mean", r(mean), "sd", r(sd)) replace
 	
 	reghdfe m_quality_output day_in_study_beg day_in_study_end, absorb(pid month#year) cluster(pid) 
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/proof_learning.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/proof_learning_1.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe m_quality_output day1to7 day8to14 day15to21 day22to28, absorb(pid month#year) cluster(pid) 
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/proof_learning.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables//proof_learning_2.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	
 // 	** learning base table 
@@ -67,6 +65,7 @@
 	
 	* controlling for lags of depvar 
 	
+	// ST: This command fails because pid day_in_study combos are not unqiue. I am not sure how to procueed
 	xtset pid day_in_study
 	
 	* replacing missings with previous lags
@@ -76,22 +75,22 @@
 	
 	reghdfe m_quality_output temperature_c lag_output, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning.xls", addstat("mean", r(mean), "sd", r(sd)) replace 
+	outreg2 using "$output/tables/learning_0.xls", addstat("mean", r(mean), "sd", r(sd)) replace 
 	
 	reghdfe m_quality_output temperature_c l1_temperature_c l2_temperature_c l3_temperature_c lag_output, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/learning_1.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	reghdfe m_quality_output temperature_c l1_temperature_c l2_temperature_c l3_temperature_c l4_temperature_c lag_output, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/learning_2.xls", addstat("mean", r(mean), "sd", r(sd))
 	display  _b[l3_temp] + _b[l4_temp] 
 	test  _b[l3_temp] + _b[l4_temp] = 0 
 	
 	
 	reghdfe m_quality_output temperature_c l1_temperature_c l2_temperature_c l3_temperature_c l4_temperature_c l5_temperature_c lag_output, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/learning_3.xls", addstat("mean", r(mean), "sd", r(sd))
 	display  _b[l3_temp] + _b[l4_temp] + _b[l5_temp]
 	test  _b[l3_temp] + _b[l4_temp] + _b[l5_temp] = 0 
 	
@@ -102,20 +101,20 @@
 	
 	reghdfe m_quality_output temperature_c ld1_temperature_c ld2_temperature_c ld3_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning_leads.xls", addstat("mean", r(mean), "sd", r(sd)) 
+	outreg2 using "$output/tables/learning_leads_0.xls", addstat("mean", r(mean), "sd", r(sd)) 
 	di _b[ld1_temp] + _b[ld2_temp] + _b[ld3_temp]
 	test _b[ld1_temp] + _b[ld2_temp] + _b[ld3_temp] = 0 
 	
 	reghdfe m_quality_output temperature_c ld1_temperature_c ld2_temperature_c ld3_temperature_c ld4_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning_leads.xls", addstat("mean", r(mean), "sd", r(sd)) 
+	outreg2 using "$output/tables/learning_leads_1.xls", addstat("mean", r(mean), "sd", r(sd)) 
 	di _b[ld1_temp] + _b[ld2_temp] + _b[ld3_temp] + _b[ld4_temp]
 	test _b[ld1_temp] + _b[ld2_temp] + _b[ld3_temp] + _b[ld4_temp] = 0 
 	
 	
 	reghdfe m_quality_output temperature_c ld1_temperature_c ld2_temperature_c ld3_temperature_c ld4_temperature_c ld5_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning_leads.xls", addstat("mean", r(mean), "sd", r(sd)) 
+	outreg2 using "$output/tables/learning_leads_2.xls", addstat("mean", r(mean), "sd", r(sd)) 
 	di _b[ld1_temp] + _b[ld2_temp] + _b[ld3_temp] + _b[ld4_temp] + _b[ld5_temp]
 	test _b[ld1_temp] + _b[ld2_temp] + _b[ld3_temp] + _b[ld4_temp] + _b[ld5_temp] = 0 
 	
@@ -126,7 +125,7 @@
 	
 	reghdfe m_quality_output temperature_c l1_temperature_c l2_temperature_c l3_temperature_c l4_temperature_c l5_temperature_c lag_output if day_in_study>5 & day_in_study<15, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning_beg_vs_end.xls", addstat("mean", r(mean), "sd", r(sd)) replace
+	outreg2 using "$output/tables/learning_beg_vs_end_0.xls", addstat("mean", r(mean), "sd", r(sd)) replace
 	
 	display  _b[l3_temp] + _b[l4_temp] + _b[l5_temp] 
 	test  _b[l3_temp] + _b[l4_temp] + _b[l5_temp]  = 0 
@@ -134,7 +133,7 @@
 	
 	reghdfe m_quality_output temperature_c l1_temperature_c l2_temperature_c l3_temperature_c l4_temperature_c l5_temperature_c lag_output if day_in_study>18, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning_beg_vs_end.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/learning_beg_vs_end_1.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	display  _b[l3_temp] + _b[l4_temp] + _b[l5_temp]
 	test  _b[l3_temp] + _b[l4_temp] + _b[l5_temp] = 0 
@@ -147,7 +146,7 @@
 	
 	reghdfe m_quality_output temperature_c l1_temperature_c l2_temperature_c l3_temperature_c l4_temperature_c l5_temperature_c lag_output if computer==0 & day_in_study>5 & day_in_study<15, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning_beg_vs_end.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/learning_beg_vs_end_2.xls", addstat("mean", r(mean), "sd", r(sd))
 	
 	display  _b[l3_temp] + _b[l4_temp] + _b[l5_temp] 
 	test  _b[l3_temp] + _b[l4_temp] + _b[l5_temp]  = 0 
@@ -155,7 +154,7 @@ outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + res
 	
 	reghdfe m_quality_output temperature_c l1_temperature_c l2_temperature_c l3_temperature_c l4_temperature_c l5_temperature_c lag_output if computer==1 & day_in_study>5 & day_in_study<15, absorb(pid day_in_study month#year) cluster(pid)
 	summ m_quality_output if e(sample) == 1 
-outreg2 using "$dir/05. Analysis/01. Code/new results 2023 2024/clean code + results jun 2024/results/learning_beg_vs_end.xls", addstat("mean", r(mean), "sd", r(sd))
+	outreg2 using "$output/tables/learning_beg_vs_end_3.xls", addstat("mean", r(mean), "sd", r(sd))
 
 	display  _b[l3_temp] + _b[l4_temp] + _b[l5_temp] 
 	test  _b[l3_temp] + _b[l4_temp] + _b[l5_temp]  = 0 
