@@ -11,8 +11,7 @@ Modified By:	Simon Taye
 	* learning figure
 	
 
-	clear all 
-	
+clear all 
 use "$data/generated/hi_analysis_daily.dta", clear 
 	
 	bysort pid: gen temp = m_quality_output if day_in_study==1
@@ -32,7 +31,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	
 	
 	
-	/// TODO axis labels seem to be off
 	preserve 
 	
 		replace computer = 0 if a24==1

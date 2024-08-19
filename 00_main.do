@@ -29,43 +29,50 @@ Author:		Simon Taye
 	cap mkdir "$output/tables"
 
 	
-
-	
 local install_packages_flag 0
 *** Install Required Packages
 	if `install_packages_flag' == 1 {
 		cap ssc install winsor
 		cap ssc install reghdfe
 		cap ssc install outreg2
+		cap ssc install estout
 	}
 
 local cleaning_dos 0
 *** Runing cleaning do files
 	if `cleaning_dos' == 1 {
-		do "$root/code/11_temp.do"
-		do "$root/code/12_merge_temp_prod.do"
-		do "$root/code/13_lags_baseline.do"
-		do "$root/code/14_pollution.do"
+		do "$root/code/1_1_temp.do"
+		do "$root/code/1_2_join_temp_prod.do"
+		do "$root/code/1_3_merge_lags_baseline.do"
+		do "$root/code/1_4_merge_pollution.do"
 	}
 
 
 *** Run do files for figures and tables
-	// INFO: Orginially named 'learning.do'
-	do "$root/code/2_figure_1.do"
-	// INFO: Generates results for Table A10
-	// FIX: Output number of observations don't match up exactly - small discrepancies of 10 - 20
-	// INFO: Orginially named 'learning growth rates.do'
-	do "$root/code/2_table_a4.do"
-	// INFO: Orignially part of productivity.do
-	do "$root/code/2_table_a10.do"
+	// FIX: Output number of observations don't match up exactly - small discrepancies of 10 - 20 for multiple tables
+
+local sorted 1
+	if `sorted' == 1 {
+		// INFO: Orginially named 'learning.do'
+		do "$root/code/2_figure_1.do"
+		// INFO: Orignially part of productivity.do
+		do "$root/code/2_figure_a2.do"
+		do "$root/code/2_table_1.do"
+		do "$root/code/2_table_a1.do"
+		do "$root/code/2_table_a2.do"
+		do "$root/code/2_table_a3.do"
+		do "$root/code/2_table_a4.do"
+		// INFO: Orginially named 'learning growth rates.do'
+		do "$root/code/2_table_a10.do"
+	}
 
 local unsorted 0
 **** Run unsorted figures
 	if `unsorted' == 1 {
-		do "$root/code/learning with temp bins.do" 
 		do "$root/code/productivity.do"
+		*do "$root/code/learning with temp bins.do" 
 		* do "$root/code/learning.do" -> has errror
 	}
 
 * Quit after running
-exit, clear
+clear all
