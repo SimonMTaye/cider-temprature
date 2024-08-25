@@ -1,6 +1,6 @@
 /****************************************************************
 ****************************************************************
-File:		21_figure_1_learning
+File:		2_figure_1
 Purpose:	Generate Figure 1: learning results
 
 Author:		Isadora Frankenthal

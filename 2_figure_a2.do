@@ -63,7 +63,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		xtitle(" ") xscale(r(0.7 4.2) titlegap(4)) xlabel(1 "Under 27°C" 2 "27-29.75°C" 3 "29.75-33.45°C" 4 "Above 33.45°C") /// 
 		xtitle("Temperature Quartiles") yscale(r(-200(50)50) titlegap(-1.5)) ylabel(-200(50)50) plotregion(margin(right)) 
 
-	graph export "$output/figures/figure_A2.pdf", replace
+	graph export "$output/figures/figure_a2.pdf", replace
 	
 	
 	

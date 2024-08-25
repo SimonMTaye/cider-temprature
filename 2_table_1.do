@@ -3,11 +3,7 @@
 File:		2_table_1.do
 Purpose:	Generate Table 1: Temperature Effect on Hourly Avg Productivity results 
 
-
-NOTE: Not sure which table in the paper it corresponds to
-
 Author:		Isadora Frankenthal
-
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/

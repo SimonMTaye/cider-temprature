@@ -1,10 +1,10 @@
+// TODO: Check
+
 /****************************************************************
 ****************************************************************
 File:		2_table_a2.do
-Purpose:	Generate Table AX: Temperature Effect on Hourly Avg Productivity results w/ Pollution
+Purpose:	Generate Table A2: Temperature Effect on Hourly Avg Productivity results w/ Pollution
 
-
-NOTE: Not sure which table in the paper it corresponds to
 
 Author:		Isadora Frankenthal
 
@@ -22,36 +22,50 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	
 	* average productivity per hour 
 	reghdfe m_quality_output temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
-	summ m_quality_output if e(sample) == 1 
-	outreg2 using "$output/tables/table_a2.xls", ///
-		addstat("Dependent Variable Mean", r(mean)) replace ///
-		label nocon nodepvar ctitle("Quality Adjusted Output (per hr)") 
-	
+		summ m_quality_output if e(sample) == 1 
+		estadd scalar mean = r(mean) 
+		* Store number of observations
+		estadd scalar num_obs = e(N)
+	eststo
+
 	* average entries per hour
 	reghdfe m_total_entries temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
-	summ m_total_entries if e(sample) == 1 
-	outreg2 using "$output/tables/table_a2.xls", /// 
-		addstat("Dependent Variable Mean", r(mean)) ///
-		label nocon nodepvar ctitle("Total number of entries (per hr)") 
+		summ m_quality_output if e(sample) == 1 
+		estadd scalar mean = r(mean) 
+		* Store number of observations
+		estadd scalar num_obs = e(N)
+	eststo
+
 	
 	* average typing time
 	reghdfe m_typing_time temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
-	summ m_typing_time if e(sample) == 1 
-	outreg2 using "$output/tables/table_a2.xls",  ///
-		addstat("Dependent Variable Mean", r(mean)) ///
-		label nocon nodepvar ctitle("Active Time Typing (min/hr)") 
+		summ m_typing_time if e(sample) == 1 
+		estadd scalar mean = r(mean) 
+		* Store number of observations
+		estadd scalar num_obs = e(N)
+	eststo
+
 	
 	* average mistakes
 	reghdfe m_mistakes_number temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
-	summ m_mistakes_number if e(sample) == 1 
-	outreg2 using "$output/tables/table_a2.xls", ///
-		addstat("Dependent Variable Mean", r(mean)) /// 
-		label nocon nodepvar ctitle("Mistakes (per 100 entries)") 
+		summ m_mistakes_number if e(sample) == 1 
+		estadd scalar mean = r(mean) 
+		* Store number of observations
+		estadd scalar num_obs = e(N)
+	eststo
+
 	
 	* average earnings
 	reghdfe performance_earnings temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
-	summ performance_earnings if e(sample) == 1 
-	outreg2 using "$output/tables/table_a2.xls", ///
-		addstat("Dependent Variable Mean", r(mean)) ///
-		label nocon nodepvar ctitle("Performance Earnings (per hr)") 
-	
+		summ performance_earnings if e(sample) == 1 
+		estadd scalar mean = r(mean) 
+		* Store number of observations
+		estadd scalar num_obs = e(N)
+	eststo
+
+
+	esttab * using "$output/tables/table_a2.rtf", replace ///
+		scalars("num_obs Observations" "r2 R-squared") ///
+		mtitles("Quality Adjusted Output (per hr)" "Total number of entries (per hr)" "Active Time Typing (min/hr)" "Mistakes (per 100 entries)" "Performance Earnings (per hr)") ///
+		label noobs nodepvars nocons keep(temp_c_two_days)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
+
