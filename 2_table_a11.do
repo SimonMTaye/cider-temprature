@@ -26,21 +26,50 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	gen two_seasons = 1 if winter==1 | post_monsoon==1
 	replace two_seasons = 0 if two_seasons==.
 	
-	estpost ttest english, by(two_seasons)
-	eststo english
+
+	// Clear any previous estimates
+	eststo clear
+
+	// Initialize an empty model
+	*estimates define empty
+
+	// List of variables to test
+	local vars english computer total_edu_yrs threetimesnine
+
+	// Loop over each variable
+	foreach var of local vars {
+	    // Run ttest
+	    estpost ttest `var', by(two_seasons)
+
+	    // Extract and store results in scalars
+	    scalar mean1 = r(mu_1)
+	    scalar se1 = r(se_1)
+	    scalar mean2 = r(mu_2)
+	    scalar se2 = r(se_2)
+	    scalar pvalue = r(p)
+	    
+	    // Add scalars to the model
+	    estadd scalar mean1_`var' = mean1
+	    estadd scalar se1_`var' = se1
+	    estadd scalar mean2_`var' = mean2
+	    estadd scalar se2_`var' = se2
+	    estadd scalar pvalue_`var' = pvalue
+	}
+	eststo
+
+	/* Store the results as an estimates model
+	ttest english, by(two_seasons)
 	// two_seasons = 0, mean .8011364 se .0301725 obs 176
 	// two_seasons = 1, mean .7789855 se .025021 obs 276
 	* p-value 0.5755 
 	
 	
-	estpost ttest computer, by(two_seasons)
-	eststo computer
+	ttest computer, by(two_seasons)
 	// two_seasons = 0, mean .25 se .03273 obs 176
 	// two_seasons = 1, mean .304347 se .02774 obs 276
 	* p-value 0.2120
 	
-	estpost ttest total_edu_yrs, by(two_seasons)
-	eststo total_edu_yrs
+	ttest total_edu_yrs, by(two_seasons)
 	// two_seasons = 0, mean 9.982 se .21128 obs 176 
 	// two_seasons = 1, mean 10.311 se .17592 obs 276
 	* p-value 0.2369 
@@ -58,11 +87,13 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	*ttest math_score, by(two_seasons)
 	*/
 
-
-	estpost ttest threetimesnine, by(two_seasons)
+	ttest threetimesnine, by(two_seasons)
 	eststo math_score
+	*/
 
-	esttab english computer total_edu_yrs math_score using "$output/tables/table_a11.rtf",  replace  ///
-	    cell(mean(fmt(3)) se(par fmt(3)) p(fmt(3))) ///
-	    collabels("April-September" "October-March" "p-value, 1 = 2") ///
-	    b(3) se(2) p(2) ///
+
+	// TODO: Table output doesn't match paper
+
+	esttab . using "$output/tables/table_a11.rtf",  replace  ///
+		scalars
+		collabels("April-September" "October-March" "p-value, 1 = 2") 
