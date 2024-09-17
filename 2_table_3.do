@@ -14,6 +14,11 @@ clear all
 use "$data/generated/hi_analysis_daily.dta", clear 
 *** beg vs end table 
 	xtset pid day_in_study
+	* genearte lag outputs
+	gen lag_output = l.m_quality_output
+	gen second_lag_output = l2.m_quality_output
+	replace lag_output = second_lag_output if lag_output==.
+
 	
 	reghdfe m_quality_output temperature_c l1_temperature_c l2_temperature_c l3_temperature_c l4_temperature_c l5_temperature_c lag_output if day_in_study>5 & day_in_study<15, absorb(pid day_in_study month#year) cluster(pid)
 		summ m_quality_output if e(sample) == 1 
@@ -74,5 +79,5 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	esttab * using "$output/tables/table_3.rtf", replace ///
 		scalars("coeff_sum Sum of Coefficients" "p_value p-value of Sum" "num_obs Observations" "r2 R-squared") ///
 		mtitles("First Half of the Study" "Second Half of the Study" "No Prior Computer Ability" "Prior Computer Ability") ///
-		label noobs nodepvars nocons keep(temp_c_two_days)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
+		label noobs nodepvars nocons keep(temperature_c)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
 

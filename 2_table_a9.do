@@ -55,6 +55,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	esttab * using "$output/tables/table_a9.rtf", replace ///
 		scalars("coeff_sum Sum of Coefficients" "p_value p-value of Sum" "num_obs Observations" "r2 R-squared") ///
 		mtitles("N = Three Leads" "N = Four Leads" "N = Five Leads") ///
-		label noobs nodepvars nocons keep(temp_c_two_days)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
+		label noobs nodepvars nocons keep(temperature_c)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
 
 

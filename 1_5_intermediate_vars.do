@@ -15,6 +15,8 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	bysort pid: gen temp = m_quality_output if day_in_study==1
 	bysort pid: egen day_1_quality = max(temp)
 	gen m_quality_output_rel = m_quality_output/day_1_quality
+
+		
 	
 	* temp bins by day (so weird mix of people but should be lower bound to continued exposure)
 	sum temperature_c, d
@@ -90,7 +92,10 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	* top/bottom decile 
 	gen tempave_pid_topbottomdecile = 1 if (tempave_pid >`tempave_pid_p10' & tempave_pid!=.)
 	replace tempave_pid_topbottomdecile = 0 if (tempave_pid <=`tempave_pid_p90' & tempave_pid!=.)
-	la var temp_topbottomdecile "1 if top decile temp by pid ave, 0 if bottom"
+	label var temp_topbottomdecile "1 if top decile temp by pid ave, 0 if bottom"
+
+	label var temperature_c "Temperature (Celcius)"
+
 	
 
 

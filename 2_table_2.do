@@ -32,7 +32,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 	
 	reghdfe m_quality_output temperature_c l1_temperature_c l2_temperature_c l3_temperature_c lag_output, absorb(pid day_in_study month#year) cluster(pid)
-	summ m_quality_output if e(sample) == 1 
 		summ m_quality_output if e(sample) == 1 
 		estadd scalar mean = r(mean) 
 		* Store number of observations
@@ -67,6 +66,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	esttab * using "$output/tables/table_2.rtf", replace ///
 		scalars("coeff_sum Sum of Coefficients" "p_value p-value of Sum" "num_obs Observations" "r2 R-squared") ///
 		mtitles("N = No Lags" "N = Three Lags" "N = Four Lags" "N = Five Lags") ///
-		label noobs nodepvars nocons keep(temp_c_two_days)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
+		label noobs nodepvars nocons keep(temperature_c)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
 
 

@@ -8,11 +8,6 @@ Author:		Simon Taye
 ****************************************************************
 ****************************************************************/
 
-// FIX: In `learning.do` The xtset command fails because pid day_in_study combos are not unqiue
-// FIX: idk where to find the eop scheme package so i removed it
-	* productivity.do
-	* learning with bins.do
-
 	
 
 *** Set path variables
@@ -36,10 +31,12 @@ local install_packages_flag 0
 		cap ssc install reghdfe
 		cap ssc install outreg2
 		cap ssc install estout
+		cap ssc install swindex
+		cap ssc install binscatter
 	}
 
 // FIX: Output number of observations don't match up exactly - small discrepancies of 10 - 20 for multiple tables
-local cleaning_dos 0
+local cleaning_dos 1
 *** Runing cleaning do files
 	if `cleaning_dos' == 1 {
 		do "$root/code/1_1_temp.do"
@@ -47,12 +44,14 @@ local cleaning_dos 0
 		do "$root/code/1_3_merge_lags_baseline.do"
 		do "$root/code/1_4_merge_pollution.do"
 		do "$root/code/1_5_intermediate_vars.do"
+		do "$root/code/1_6_merge_cog_ab.do"
 	}
 
 
 *** Run do files for figures and tables
 
-local sorted 0
+local sorted 1
+set scheme eop
 	if `sorted' == 1 {
 		// INFO: Orginially named 'learning.do'
 		do "$root/code/2_figure_1.do"
@@ -69,22 +68,20 @@ local sorted 0
 		do "$root/code/2_table_a2.do"
 		do "$root/code/2_table_a3.do"
 		do "$root/code/2_table_a4.do"
-
 		// INFO: Orginially part of learning with temp bins.do
-		//do "$root/code/2_table_a5.do"
+		do "$root/code/2_table_a5.do"
+		// INFO: Orginially part of abseentism.do
+		do "$root/code/2_table_a6.do"
+		// INFO: Orginially part of coginition.do
+		do "$root/code/2_table_a7.do"
 
-		// INFO: Orginially part of learning.do
 		// INFO: Orginially part of learning.do
 		do "$root/code/2_table_a8.do"
 		do "$root/code/2_table_a9.do"
 		// INFO: Orginially named 'learning growth rates.do'
 		do "$root/code/2_table_a10.do"
-	}
-
-local unsorted 1
-**** Run unsorted figures
-	if `unsorted' == 1 {
-		do "$root/code/learning with temp bins.do" 
+		// INFO: Originally from "balance.do"
+		do "$root/code/2_table_a11.do"
 	}
 
 * Quit after running

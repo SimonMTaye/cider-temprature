@@ -1,5 +1,3 @@
-// TODO: Check
-
 /****************************************************************
 ****************************************************************
 File:		2_table_a2.do
@@ -11,8 +9,6 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-
-//INFO: Could not find matching table
 
 clear all
 use "$data/generated/hi_analysis_daily.dta", clear 
@@ -67,5 +63,5 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	esttab * using "$output/tables/table_a2.rtf", replace ///
 		scalars("num_obs Observations" "r2 R-squared") ///
 		mtitles("Quality Adjusted Output (per hr)" "Total number of entries (per hr)" "Active Time Typing (min/hr)" "Mistakes (per 100 entries)" "Performance Earnings (per hr)") ///
-		label noobs nodepvars nocons keep(temp_c_two_days)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
+		label noobs nodepvars nocons keep(temperature_c)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
 

@@ -14,13 +14,12 @@ use "$data/generated/hi_analysis_hourly.dta", clear
 
 	label var temperature_c "Temperature (Celcius)"
 
-	// productivity table at hourly level 
 	
 	reghdfe quality_output temperature_c, absorb(pid day_in_study time_india month#year) cluster(pid)
-	summ quality_output if e(sample) == 1 
-	estadd scalar num_obs = e(N)
-	estadd scalar mean = r(mean) 
-	estadd scalar sd = r(sd)
+		summ quality_output if e(sample) == 1 
+		estadd scalar num_obs = e(N)
+		estadd scalar mean = r(mean) 
+		estadd scalar sd = r(sd)
 	eststo
 	
 	reghdfe total_entries temperature_c, absorb(pid day_in_study time_india month#year) cluster(pid)

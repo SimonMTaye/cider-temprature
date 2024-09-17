@@ -14,9 +14,9 @@ Modified By:	Simon Taye
 clear all 
 use "$data/generated/hi_analysis_daily.dta", clear 
 	
-	bysort pid: gen temp = m_quality_output if day_in_study==1
-	bysort pid: egen day_1_quality = max(temp)
-	gen m_quality_output_rel = m_quality_output/day_1_quality
+	*bysort pid: gen temp_output = m_quality_output if day_in_study==1
+	*bysort pid: egen day_1_quality = max(temp_output)
+	*gen m_quality_output_rel = m_quality_output/day_1_quality
 	
 	
 	
