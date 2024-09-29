@@ -1,0 +1,5 @@
+data/generated
+data/raw/
+output
+.DS_STORE
+**/.DS_STORE
