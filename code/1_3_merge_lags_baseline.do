@@ -84,9 +84,7 @@ use "$data/generated/hi_hourly_temp_NOAA_indiatime.dta", clear
 save `lags'
 
 
-local times hourly daily
-foreach time of local times {
-	use "$data/generated/hi_analysis_`time'.dta", clear
+use "$data/generated/hi_analysis_daily.dta", clear
 
 	****** Merge lagged temperatue data with productivity data
 
@@ -99,13 +97,7 @@ foreach time of local times {
 		merge m:1 pid using "$data/raw/baseline_cleaned.dta"
 		drop _merge 
 		
-		* used for balance table a11
-		gen english = a15
-		gen computer = a23
-		* a18 what is 3 x 9 
-		gen threetimesnine = a18 
-		replace threetimesnine = 0 if threetimesnine!=1
-
+		
 		
 		foreach var in temp_1 temp_2 temp_3 temp_4 temp_5 temp_6 temp_7 temp_8 temp_9 temp_10 temp_11 temp_12 temp_13 {
 			
@@ -124,5 +116,4 @@ foreach time of local times {
 		gen earnings = performance_earnings + attendance_earnings
 		gen performance_earnings_hr = performance_earnings/count_hours
 		
-	save "$data/generated/hi_analysis_`time'.dta", replace
-}
+save "$data/generated/hi_analysis_daily.dta", replace

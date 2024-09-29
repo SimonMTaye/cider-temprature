@@ -12,7 +12,7 @@ Modified By:	Simon Taye
 
 clear all
 * learning with growth rates
-use "$data/generated/hi_analysis_hourly.dta", clear 
+use "$data/generated/hi_analysis_daily.dta", clear 
 
 	* define period to be every two days 
 	sort pid day_in_study 

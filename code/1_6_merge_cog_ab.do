@@ -11,10 +11,21 @@ Note:		Adapated from cognition.do
 ****************************************************************/
 use "$data/generated/hi_analysis_daily.dta", clear  
 
-	merge 1:1 pid day_in_study using "$data/raw/cognitive_tasks_dataset.dta", nogen
-	merge 1:1 pid day_in_study using "$data/raw/pvt_dataset.dta" , nogen
-	merge 1:1 pid day_in_study using "$data/raw/absenteeism.dta", nogen
-	merge 1:1 pid day_in_study using "$data/raw/checkin_checkout.dta", nogen
+	merge 1:1 pid day_in_study using "$data/raw/cognitive_tasks_dataset.dta"
+		drop if _merge == 2
+		drop _merge
+
+	merge 1:1 pid day_in_study using "$data/raw/pvt_dataset.dta" 
+		drop if _merge == 2
+		drop _merge
+
+	merge 1:1 pid day_in_study using "$data/raw/absenteeism.dta"
+		drop if _merge == 2
+		drop _merge
+
+	merge 1:1 pid day_in_study using "$data/raw/checkin_checkout.dta"
+		drop if _merge == 2
+		drop _merge
 
 	* cognition index for table a5
 	foreach var in pv_perf co_payment hf_payment {

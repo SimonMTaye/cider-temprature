@@ -28,7 +28,6 @@ import delimited "$data/raw/updated_hourly_temp_NOAA.csv", clear
 	destring month, replace
 	destring year, replace 
 	
-	pause
 
 	replace time = 0 if time==2400
 		

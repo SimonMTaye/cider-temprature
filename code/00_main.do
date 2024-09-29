@@ -36,7 +36,7 @@ local install_packages_flag 0
 	}
 
 // FIX: Output number of observations don't match up exactly - small discrepancies of 10 - 20 for multiple tables
-local cleaning_dos 1
+local cleaning_dos 0
 *** Runing cleaning do files
 	if `cleaning_dos' == 1 {
 		do "$root/code/1_1_temp.do"
@@ -50,7 +50,7 @@ local cleaning_dos 1
 
 *** Run do files for figures and tables
 
-local sorted 1
+local sorted 0
 set scheme eop
 	if `sorted' == 1 {
 		// INFO: Orginially named 'learning.do'
@@ -83,6 +83,8 @@ set scheme eop
 		// INFO: Originally from "balance.do"
 		do "$root/code/2_table_a11.do"
 	}
+		do "$root/code/2_table_a11.do"
+
 
 * Quit after running
 clear all

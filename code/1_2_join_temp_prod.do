@@ -11,7 +11,7 @@ Modified By:	Simon Taye
 use "$data/raw/hourly_productivity.dta", clear 
 	
 	* drop obs who dropped out at baseline
-	drop if dropout_category ==2
+	keep if dropout_category !=2
 	egen date = group(year month day)
 	
 	replace typing_time=5 if typing_time>5
@@ -47,15 +47,7 @@ use "$data/raw/hourly_productivity.dta", clear
 	
 	rename time time_india
 
-******** Construct Productivity variables 
 
-	gen total_entries = correct_entries + mistakes_number
-	gen productivity = correct_entries/typing_time
-	replace productivity=productivity*60
-	gen mistakes_per_entries = mistakes_number/total_entries
-	gen mistakes_per_entries_00 = mistakes_per_entries*100
-	gen quality_output = correct_entries - 8*mistakes_number 
-	
 
 
 ******** Merge other data
@@ -63,6 +55,16 @@ use "$data/raw/hourly_productivity.dta", clear
 	merge m:1 day month year time_india using "$data/generated/hi_hourly_temp_NOAA_indiatime.dta"
 	keep if _merge==3 
 	drop _merge 
+
+******** Construct Productivity variables 
+	gen total_entries = correct_entries + mistakes_number
+	gen productivity = correct_entries/typing_time
+	replace productivity=productivity*60
+	gen mistakes_per_entries = mistakes_number/total_entries
+	gen mistakes_per_entries_00 = mistakes_per_entries*100
+	gen quality_output = correct_entries - 8*mistakes_number 
+	
+******** Define panel variables
 	egen pid_day = group(pid day_in_study)
 	xtset pid_day time
 	
@@ -72,14 +74,28 @@ use "$data/raw/hourly_productivity.dta", clear
 	drop if _merge==2 
 	drop _merge
 	
-	* keep working hour data only
+	* TODO: How to handle missing values?
 	gen round_checkin = round(checkin_time)
 	gen round_checkout = round(checkout_time)
 
 	replace round_checkin = round_checkin * 100
 	replace round_checkout = round_checkout * 100
 	
+	replace round_checkin = 0 if round_checkin == .
+	replace round_checkout = 0 if round_checkout == .
+
 	
+	/*
+	tostring round_checkin, replace 
+	tostring round_checkout, replace 
+	
+	replace round_checkin = round_checkin +"00"
+	replace round_checkout = round_checkout +"00"
+	
+	destring round_checkin, replace 
+	destring round_checkout, replace 
+	*/
+
 	keep if time_india >= round_checkin & time_india <= round_checkout
 	
 	* winsorize
@@ -89,6 +105,10 @@ use "$data/raw/hourly_productivity.dta", clear
 		rename `var'_w `var'
 	}
 	
+	label var temperature_c "Temprature (Celsius)"
+
+save "$data/generated/hi_analysis_hourly.dta", replace 
+
 	* creating daily dataset 
 	
 	gen m_quality_output = quality_output
@@ -101,10 +121,6 @@ use "$data/raw/hourly_productivity.dta", clear
 	gen one = 1 
 	egen count_hours = sum(one), by (pid day_in_study)
 
-	label var temperature_c "Temprature (Celsius)"
-
-save "$data/generated/hi_analysis_hourly.dta", replace 
-	
 	collapse (mean) m_mistakes_number heat_index m_total_entries m_correct_entries m_quality_output m_typing_time temperature_c fraction_high count_hours (firstnm) date day month year day_type (sum) quality_output performance_earnings attendance_earnings typing_time correct_entries voluntary_pause mistakes_number total_entries mistakes_per_entries_00, by(pid day_in_study)
 	
 	label var temperature_c "Temprature (Celsius)"
