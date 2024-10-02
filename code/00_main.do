@@ -1,50 +1,4 @@
-/****************************************************************
-****************************************************************
-File:		00_main
-Purpose:	Setup paths and install required packages
-		
 
-Author:		Simon Taye
-****************************************************************
-****************************************************************/
-
-	
-
-*** Set path variables
-	local cwd : pwd
-	* If 00_main.do is not being run from within the code folder of the research package, set path to package here
-	global root "`cwd'/.."
-	global data "$root/data"
-	global output "$root/output"
-	
-	* Make empty directories that may not exist already
-	cap mkdir "$data/generated"
-	cap mkdir "$output"
-	cap mkdir "$output/figures"
-	cap mkdir "$output/tables"
-
-	
-local install_packages_flag 0
-*** Install Required Packages
-	if `install_packages_flag' == 1 {
-		cap ssc install winsor
-		cap ssc install reghdfe
-		cap ssc install outreg2
-		cap ssc install estout
-		cap ssc install swindex
-		cap ssc install binscatter
-	}
-
-// FIX: Output number of observations don't match up exactly - small discrepancies of 10 - 20 for multiple tables
-local cleaning_dos 0
-*** Runing cleaning do files
-	if `cleaning_dos' == 1 {
-		do "$root/code/1_1_temp.do"
-		do "$root/code/1_2_join_temp_prod.do"
-		do "$root/code/1_3_merge_lags_baseline.do"
-		do "$root/code/1_4_merge_pollution.do"
-		do "$root/code/1_5_intermediate_vars.do"
-		do "$root/code/1_6_merge_cog_ab.do"
 	}
 
 
@@ -88,3 +42,7 @@ set scheme eop
 
 * Quit after running
 clear all
+
+
+
+raiojdfl;asdjf;lkdjf;las
