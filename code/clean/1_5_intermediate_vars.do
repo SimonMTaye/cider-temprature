@@ -88,15 +88,11 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	
 	
 	
-	
 	* top/bottom decile 
 	gen tempave_pid_topbottomdecile = 1 if (tempave_pid >`tempave_pid_p10' & tempave_pid!=.)
 	replace tempave_pid_topbottomdecile = 0 if (tempave_pid <=`tempave_pid_p90' & tempave_pid!=.)
 	label var temp_topbottomdecile "1 if top decile temp by pid ave, 0 if bottom"
 
 	label var temperature_c "Temperature (Celcius)"
-
-	
-
 
 save "$data/generated/hi_analysis_daily.dta", replace
