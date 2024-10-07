@@ -39,12 +39,12 @@ local install_packages_flag 0
 local cleaning_dos 0
 *** Runing cleaning do files
 	if `cleaning_dos' == 1 {
-		do "$root/code/1_1_temp.do"
-		do "$root/code/1_2_join_temp_prod.do"
-		do "$root/code/1_3_merge_lags_baseline.do"
-		do "$root/code/1_4_merge_pollution.do"
-		do "$root/code/1_5_intermediate_vars.do"
-		do "$root/code/1_6_merge_cog_ab.do"
+		do "$root/code/clean/1_1_temp.do"
+		do "$root/code/clean/1_2_join_temp_prod.do"
+		do "$root/code/clean/1_3_merge_lags_baseline.do"
+		do "$root/code/clean/1_4_merge_pollution.do"
+		do "$root/code/clean/1_5_intermediate_vars.do"
+		do "$root/code/clean/1_6_merge_cog_ab.do"
 	}
 
 
