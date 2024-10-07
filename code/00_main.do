@@ -63,28 +63,31 @@ global esttab_opts label nonote noobs nodepvars nocons nonum se
 
 *** Run do files for figures and tables
 
-local sorted 1
 set scheme eop
-    if `sorted' == 1 {
+local figures 0
+    if `figures' == 1 {
         // INFO: Orginially named 'learning.do'
-        do "$root/code/2_figure_1.do"
+        do "$root/code/figures/2_figure_1.do"
         // INFO: Orginially part of learning with temp bins.do
-        do "$root/code/2_figure_2.do"
+        do "$root/code/figures/2_figure_2.do"
         // INFO: Orignially part of productivity.do
-        do "$root/code/2_figure_a2.do"
-        do "$root/code/2_table_1.do"
+        do "$root/code/figures/2_figure_a2.do"
+    }
+
+local tables 0
+        do "$root/code/tables/2_table_1.do"
         // INFO: Orginially named 'learning.do'
-        do "$root/code/2_table_2.do"
-        do "$root/code/2_table_3.do"
+        do "$root/code/tables/2_table_2.do"
+        do "$root/code/tables/2_table_3.do"
         // INFO: Orignially part of productivity.do
-        do "$root/code/2_table_a1.do"
-        do "$root/code/2_table_a2.do"
-        do "$root/code/2_table_a3.do"
-        do "$root/code/2_table_a4.do"
+        do "$root/code/tables/2_table_a1.do"
+        do "$root/code/tables/2_table_a2.do"
+        do "$root/code/tables/2_table_a3.do"
+        do "$root/code/tables/2_table_a4.do"
         // INFO: Orginially part of learning with temp bins.do
-        do "$root/code/2_table_a5.do"
+        do "$root/code/tables/2_table_a5.do"
         // INFO: Orginially part of abseentism.do
-        do "$root/code/2_table_a6.do"
+        do "$root/code/tables2_table_a6.do"
         // INFO: Orginially part of coginition.do
         do "$root/code/2_table_a7.do"
         // INFO: Orginially part of learning.do
