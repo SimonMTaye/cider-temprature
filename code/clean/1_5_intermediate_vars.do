@@ -85,13 +85,29 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	la var tempave_pid_quartile_fh "quartile bins of temp by pid ave first half, 1 lowest"
 	
 	
-	
-	
-	
 	* top/bottom decile 
 	gen tempave_pid_topbottomdecile = 1 if (tempave_pid >`tempave_pid_p10' & tempave_pid!=.)
 	replace tempave_pid_topbottomdecile = 0 if (tempave_pid <=`tempave_pid_p90' & tempave_pid!=.)
 	label var temp_topbottomdecile "1 if top decile temp by pid ave, 0 if bottom"
+
+	* Define two day periods
+	sort pid day_in_study 
+	
+	gen two_days = 1 if inrange(day_in_study, 1, 2)
+	replace two_days = 2 if inrange(day_in_study, 3, 4)
+	replace two_days = 3 if inrange(day_in_study, 5, 6)
+	replace two_days = 4 if inrange(day_in_study, 7, 8)
+	replace two_days = 5 if inrange(day_in_study, 9, 10)
+	replace two_days = 6 if inrange(day_in_study, 11, 12)
+	replace two_days = 7 if inrange(day_in_study, 13, 14)
+	replace two_days = 8 if inrange(day_in_study, 15, 16)
+	replace two_days = 9 if inrange(day_in_study, 17, 18)
+	replace two_days = 10 if inrange(day_in_study, 19, 20)
+	replace two_days = 11 if inrange(day_in_study, 21, 22)
+	replace two_days = 12 if inrange(day_in_study, 23, 24)
+	replace two_days = 13 if inrange(day_in_study, 25, 26)
+	replace two_days = 14 if inrange(day_in_study, 27, 28)
+
 
 	label var temperature_c "Temperature (Celcius)"
 

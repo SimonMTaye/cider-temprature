@@ -11,7 +11,7 @@ Modified By:	Simon Taye
 Note:		Code uses variables that aren't part of the dataset anymore.
 		I changed them based on which variables they most likely matched
 		and context from the paper.
-// TODO: Check changes below
+Changes: 
 		l1_temp ->	l1_temperature_c
 			* Following the lagged temperature variable used for other tables
 			* eg. Table 2
