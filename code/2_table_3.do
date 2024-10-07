@@ -76,7 +76,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar p_value = r(p)
 	eststo
 
-	esttab * using "$output/tables/table_3.rtf", replace ///
+	esttab * using "$output/tables/table_3.tex", replace ///
 		scalars("coeff_sum Sum of Coefficients" "p_value p-value of Sum" "num_obs Observations" "r2 R-squared") ///
 		mtitles("First Half of the Study" "Second Half of the Study" "No Prior Computer Ability" "Prior Computer Ability") ///
 		label noobs nodepvars nocons keep(temperature_c)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
