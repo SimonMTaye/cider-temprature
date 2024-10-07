@@ -35,8 +35,18 @@ local install_packages_flag 0
 		cap ssc install binscatter
 	}
 
-// FIX: Output number of observations don't match up exactly - small discrepancies of 10 - 20 for multiple tables
-local cleaning_dos 0
+	if !fileexists("$data/raw") {
+		if fileexists("$data/raw.zip") {
+			cd "$data"
+			unzipfile "$data/raw.zip",  replace 
+			cd "$root/code"
+		} 
+		else {
+			display "Raw data missing"
+		}
+	}
+
+local cleaning_dos 1
 *** Runing cleaning do files
 	if `cleaning_dos' == 1 {
 		do "$root/code/clean/1_1_temp.do"
