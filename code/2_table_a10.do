@@ -84,16 +84,22 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	* contemporaneous 
 	
 	reghdfe growth_quality_output_two_days temp_c_two_days, absorb(pid two_days month#year) cluster(pid)
-	estadd scalar num_obs = e(N)
+		estadd scalar num_obs = e(N)
+		estadd scalar coeff_sum = .
+		estadd scalar p_value = .
 	eststo
 	
 	
 	reghdfe growth_quality_output_two_days temp_c_two_days if two_days<9, absorb(pid two_days month#year) cluster(pid)
-	estadd scalar num_obs = e(N)
+		estadd scalar num_obs = e(N)
+		estadd scalar coeff_sum = .
+		estadd scalar p_value = .
 	eststo
 		
 	reghdfe growth_quality_output_two_days temp_c_two_days if computer==0, absorb(pid two_days month#year) cluster(pid)
-	estadd scalar num_obs e(N)
+		estadd scalar num_obs e(N)
+		estadd scalar coeff_sum = .
+		estadd scalar p_value = .
 	eststo
 	
 	
@@ -104,40 +110,46 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	
 	
 	reghdfe growth_quality_output_two_days temp_c_two_days l1_temp_c_two_days l2_temp_c_two_days l3_temp_c_two_days if dummy3==1, absorb(pid two_days month#year) cluster(pid)
-	* Store number of observations
-	estadd scalar num_obs = e(N)
-	* Calculate the sum of the coefficients
-	estadd scalar coeff_sum = _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days]
-	* Perform the test and store the p-value
-	test _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days] = 0
-	estadd scalar p_value = r(p)
+		* Store number of observations
+		estadd scalar num_obs = e(N)
+		* Calculate the sum of the coefficients
+		estadd scalar coeff_sum = _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days]
+		* Perform the test and store the p-value
+		test _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days] = 0
+		estadd scalar p_value = r(p)
 	eststo
 		
 
 	reghdfe growth_quality_output_two_days temp_c_two_days l1_temp_c_two_days l2_temp_c_two_days l3_temp_c_two_days if dummy3==1 & two_days<9, absorb(pid two_days month#year) cluster(pid)
-	* Store number of observations
-	estadd scalar num_obs = e(N)
-	* Calculate the sum of the coefficients
-	estadd scalar coeff_sum = _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days]
-	* Perform the test and store the p-value
-	test _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days] = 0
-	estadd scalar p_value = r(p)
+		* Store number of observations
+		estadd scalar num_obs = e(N)
+		* Calculate the sum of the coefficients
+		estadd scalar coeff_sum = _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days]
+		* Perform the test and store the p-value
+		test _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days] = 0
+		estadd scalar p_value = r(p)
 	eststo
 		
 	reghdfe growth_quality_output_two_days temp_c_two_days l1_temp_c_two_days l2_temp_c_two_days l3_temp_c_two_days if dummy3==1 & computer==0, absorb(pid two_days month#year) cluster(pid)
-	* Store number of observations
-	estadd scalar num_obs = e(N)
-	* Calculate the sum of the coefficients
-	estadd scalar coeff_sum = _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days]
-	* Perform the test and store the p-value
-	test _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days] = 0
-	estadd scalar p_value = r(p)
+		* Store number of observations
+		estadd scalar num_obs = e(N)
+		* Calculate the sum of the coefficients
+		estadd scalar coeff_sum = _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days]
+		* Perform the test and store the p-value
+		test _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days] = 0
+		estadd scalar p_value = r(p)
 	eststo
 
-	esttab * using "$output/tables/table_a10.rtf", replace ///
-		scalars("coeff_sum Sum of Coefficients" "p_value p-value of Sum" "num_obs Observations" "r2 R-squared") ///
-		mtitles("Full Study Period" "First Half of the Study" "No Prior Computer Experience" "Full Study Period" "First Half of the Study" "No Prior Computer Experience") ///
-		label noobs nodepvars nocons keep(temp_c_two_days) 
+	#delimit ;
+	esttab * using "$output/tables/table_a10.tex",  replace
+		$esttab_opts keep(temp_c_two_days) 
+		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lead 1 to N" "p_value p-value" "r2 R-squared" "num_obs Observations") 
+		mtitles("\shortstack{Full Study\\ period}" "\shortstack{First half of\\study}" "\shortstack{No Prior\\Computer\\Experience}" "\shortstack{Full study\\ period}" "\shortstack{First half of\\ study}" "\shortstack{No Prior\\Computer\\Experience}") ///
+		mgroups("Dependent Variable is \textbf{Growth in Average Hourly Quality Adjusted Output}",
+			pattern(1 0 0 0 0 0) 
+			prefix(\multicolumn{@span}{c}{) suffix(}) 
+			span erepeat(\cmidrule(lr){@span})) ; 
+	#delimit cr 
 
 
 	

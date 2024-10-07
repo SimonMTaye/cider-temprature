@@ -26,7 +26,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
 	* average entries per hour
 	reghdfe m_total_entries temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
-		summ m_quality_output if e(sample) == 1 
+		summ m_total_entries if e(sample) == 1 
 		estadd scalar mean = r(mean) 
 		* Store number of observations
 		estadd scalar num_obs = e(N)
@@ -60,8 +60,19 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 
-	esttab * using "$output/tables/table_a2.rtf", replace ///
-		scalars("num_obs Observations" "r2 R-squared") ///
-		mtitles("Quality Adjusted Output (per hr)" "Total number of entries (per hr)" "Active Time Typing (min/hr)" "Mistakes (per 100 entries)" "Performance Earnings (per hr)") ///
-		label noobs nodepvars nocons keep(temperature_c)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
+	#delimit ;
+	esttab * using "$output/tables/table_a2.tex",  replace 
+		$esttab_opts
+		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
+		mtitles("\textbf{\shortstack{Quality Adjusted\\ Output}}" 
+				"\textbf{\shortstack{Total Number of\\ Entries}}" 
+				"\textbf{\shortstack{Active Typing\\ Time}}" 
+				"\shortstack{\textbf{Mistakes} (per 100\\ entries)}" 
+				"\textbf{\shortstack{Performance\\Earnings}}") 
+		mgroups("Dependent Variable is \textbf{Average Hourly}",  
+			pattern(1 0 0 0 0) 
+			prefix(\multicolumn{@span}{c}{) suffix(}) 
+			span erepeat(\cmidrule(lr){@span})) ;
+
+	#delimit cr;
 

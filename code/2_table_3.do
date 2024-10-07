@@ -77,7 +77,13 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 	esttab * using "$output/tables/table_3.tex", replace ///
-		scalars("coeff_sum Sum of Coefficients" "p_value p-value of Sum" "num_obs Observations" "r2 R-squared") ///
-		mtitles("First Half of the Study" "Second Half of the Study" "No Prior Computer Ability" "Prior Computer Ability") ///
-		label noobs nodepvars nocons keep(temperature_c)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
+		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lag 3 to N" "p_value p-value" "num_obs Observations" "r2 R-squared") ///
+		mtitles("\shortstack{First Half of\\ the Study}" "\shortstack{Second Half of\\ the Study}" "\shortstack{No Prior\\ Computer Ability}" "\shortstack{Prior Computer\\ Ability}") ///
+		$esttab_opts keep(temperature_c) ///
+		mgroups("Dependent Variable is \textbf{Average Hourly Quality Adjust Output}",  ///
+			pattern(1 0 0 0) ///
+			prefix(\multicolumn{@span}{c}{) suffix(}) ///
+			span erepeat(\cmidrule(lr){@span})) ///
+
+
 

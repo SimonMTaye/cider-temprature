@@ -68,7 +68,13 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar sd = r(sd)
 		eststo
 
-	esttab * using "$output/tables/table_a8.rtf",  replace ///
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations") ///
-		label noobs nodepvars nocons nomtitles mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1))
+	#delimit ;
+	esttab * using "$output/tables/table_a8.tex",  replace
+		$esttab_opts nomtitles
+		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
+		mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)",
+			pattern(1 0 0) 
+			prefix(\multicolumn{@span}{c}{) suffix(}) 
+			span erepeat(\cmidrule(lr){@span})) ; 
 
+	#delimit cr;

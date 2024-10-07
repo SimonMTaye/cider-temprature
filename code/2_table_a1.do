@@ -49,7 +49,18 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	estadd scalar sd = r(sd)
 	eststo
 	
-	esttab * using "$output/tables/table_a1.rtf",  replace ///
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations") ///
-		mtitles("Quality Adjusted Output (per hr)" "Total Number of Entries (per hr)" "Active Time Typing (min/hr)" "Mistakes (per 100 entries)" "Performance Earnings (per hr)") ///
-		label noobs nodepvars nocons 
+	#delimit ;
+	esttab * using "$output/tables/table_a1.tex",  replace 
+		$esttab_opts
+		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
+		mtitles("\textbf{\shortstack{Quality Adjusted\\ Output}}" 
+				"\textbf{\shortstack{Total Number of\\ Entries}}" 
+				"\textbf{\shortstack{Active Typing\\ Time}}" 
+				"\shortstack{\textbf{Mistakes} (per 100\\ entries)}" 
+				"\textbf{\shortstack{Performance\\Earnings}}") 
+		mgroups("Dependent Variable is \textbf{Average Hourly}",  
+			pattern(1 0 0 0 0) 
+			prefix(\multicolumn{@span}{c}{) suffix(}) 
+			span erepeat(\cmidrule(lr){@span})) ;
+
+	#delimit cr;

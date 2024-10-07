@@ -52,9 +52,18 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar p_value = r(p)
 	eststo
 
-	esttab * using "$output/tables/table_a9.rtf", replace ///
-		scalars("coeff_sum Sum of Coefficients" "p_value p-value of Sum" "num_obs Observations" "r2 R-squared") ///
-		mtitles("N = Three Leads" "N = Four Leads" "N = Five Leads") ///
-		label noobs nodepvars nocons keep(temperature_c)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
+	#delimit ;
+	esttab * using "$output/tables/table_a9.tex",  replace
+		$esttab_opts keep(temperature_c)
+		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lead 1 to N" "p_value p-value" "mean Dependent Variable Mean" "r2 R-squared" "num_obs Observations") 
+		mtitles("N = Three Leads" "N = Four Leads" "N = Five Leads") 
+		mgroups("Dependent Variable is \textbf{Average Hourly Quality Adjusted Output}",
+			pattern(1 0 0) 
+			prefix(\multicolumn{@span}{c}{) suffix(}) 
+			span erepeat(\cmidrule(lr){@span})) ; 
+
+	#delimit cr 
+
+
 
 

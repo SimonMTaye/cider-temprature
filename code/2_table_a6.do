@@ -55,74 +55,10 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	gen lower_temp	= low*temperature_c
 
 	
-	/** absenteeism 
-	
-	reghdfe at_present_check temperature_c, absorb(pid day_in_study month#year) cluster(pid)
-	summ at_present_check if e(sample) == 1 
-	*outreg2 using "$dir/05. Analysis/02. Output/noaa results/absenteeism.xls", addstat("mean", r(mean), "sd", r(sd))
-	
-	reghdfe at_present_check temperature_c l1_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
-	summ at_present_check if e(sample) == 1 
-	*outreg2 using "$dir/05. Analysis/02. Output/noaa results/absenteeism.xls", addstat("mean", r(mean), "sd", r(sd))
-	
-	reghdfe at_present_check high_temp medium_temp lower_temp, absorb(pid day_in_study month#year) cluster(pid)
-	summ at_present_check if e(sample) == 1 
-	*outreg2 using "$dir/05. Analysis/02. Output/noaa results/absenteeism.xls", addstat("mean", r(mean), "sd", r(sd))
-	
-	
-	
-	** checkin checkout 
-	
-	reghdfe checkin_time temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
-	summ checkin_time if e(sample) == 1 
-	*outreg2 using "$dir/05. Analysis/02. Output/noaa results/checkinout.xls", addstat("mean", r(mean), "sd", r(sd))
-	
-	reghdfe checkout_time temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
-	summ checkout_time if e(sample) == 1 
-	*outreg2 using "$dir/05. Analysis/02. Output/noaa results/checkinout.xls", addstat("mean", r(mean), "sd", r(sd))
-	
-	reghdfe hrs_of_work temperature_c, absorb(pid day_in_study month#year) cluster(pid)
-	summ hrs_of_work if e(sample) == 1 
-	*outreg2 using "$dir/05. Analysis/02. Output/noaa results/checkinout.xls", addstat("mean", r(mean), "sd", r(sd))
-	
-	*/
-	
-	
-	
-	// new absenteeism + checkin checkout
-	
-	reghdfe at_present_check temperature_c, absorb(pid day_in_study month#year) cluster(pid)
-		summ at_present_check if e(sample) == 1 
-		estadd scalar num_obs = e(N)
-		estadd scalar mean = r(mean) 
-		estadd scalar sd = r(sd)
-	eststo
-
-	
-	reghdfe checkin_time temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
-		summ checkin_time if e(sample) == 1 
-		estadd scalar num_obs = e(N)
-		estadd scalar mean = r(mean) 
-		estadd scalar sd = r(sd)
-	eststo
-
-	
-	reghdfe checkout_time temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
-		summ checkout_time if e(sample) == 1 
-		estadd scalar num_obs = e(N)
-		estadd scalar mean = r(mean) 
-		estadd scalar sd = r(sd)
-	eststo
-
-	
-	reghdfe hrs_of_work temperature_c, absorb(pid day_in_study month#year) cluster(pid)
-		summ hrs_of_work if e(sample) == 1 
-		estadd scalar num_obs = e(N)
-		estadd scalar mean = r(mean) 
-		estadd scalar sd = r(sd)
-	eststo
-
-
+	label var l1_temperature_c "Temperature Lag"
+	label var high_temp "High Temperature (=1)"
+	label var medium_temp "Medium Temperature (=1)"
+	label var lower_temp "Low Temperature (=1)"
 	
 	
 	// new absenteeism + checkin checkout for appendix / extra checks 
@@ -193,11 +129,20 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar sd = r(sd)
 	eststo
 
-	esttab * using "$output/tables/table_a6.rtf",  replace ///
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations") ///
-		mgroups("Participant Present (=1)" "Check-in Time" "Check-out Time" "Total Hours of Work", pattern(1 0 1 0 1 0 1 0)) ///
-		label noobs nodepvars nocons 
 
 	
-	
+	#delimit ;
+	esttab * using "$output/tables/table_a6.tex",  replace 
+		$esttab_opts
+		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
+		nomtitles
+		mgroups("\textbf{Participant Present} (=1)" "\textbf{Check-in Time}" "\textbf{Check-out Time}" "\textbf{Total Hours of Work}", 
+			pattern(1 0 1 0 1 0 1 0) 
+			prefix(\multicolumn{@span}{c}{) suffix(}) 
+			span) ; 
+
+	#delimit cr;
+
+
+
 	

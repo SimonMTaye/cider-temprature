@@ -29,13 +29,19 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar mean = r(mean) 
 		* Store number of observations
 		estadd scalar num_obs = e(N)
+		estadd scalar coeff_sum =  .
+		estadd scalar p_value = .
 	eststo
 	
 	reghdfe m_quality_output temperature_c l1_temperature_c l2_temperature_c l3_temperature_c lag_output, absorb(pid day_in_study month#year) cluster(pid)
 		summ m_quality_output if e(sample) == 1 
 		estadd scalar mean = r(mean) 
-		* Store number of observations
 		estadd scalar num_obs = e(N)
+		* Store number of observations
+		estadd scalar coeff_sum =  _b[l3_temp] 
+		* Perform the test and store the p-value
+		test  _b[l3_temp] = 0 
+		estadd scalar p_value = r(p)
 	eststo
 
 	
@@ -63,9 +69,13 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar p_value = r(p)
 	eststo
 
-	esttab * using "$output/tables/table_2.rtf", replace ///
-		scalars("coeff_sum Sum of Coefficients" "p_value p-value of Sum" "num_obs Observations" "r2 R-squared") ///
+	esttab * using "$output/tables/table_2.tex", replace ///
+		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lag 3 to N" "p_value p-value" "num_obs Observations" "r2 R-squared") ///
 		mtitles("N = No Lags" "N = Three Lags" "N = Four Lags" "N = Five Lags") ///
-		label noobs nodepvars nocons keep(temperature_c)  mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)", pattern(1 1 1 1))
+		$esttab_opts keep(temperature_c)  ///
+		mgroups("Dependent Variable is \textbf{Average Hourly Quality Adjust Output}",  ///
+			pattern(1 0 0 0) ///
+			prefix(\multicolumn{@span}{c}{) suffix(}) ///
+			span erepeat(\cmidrule(lr){@span})) ///
 
 

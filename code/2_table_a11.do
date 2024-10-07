@@ -38,18 +38,18 @@ use "$data/raw/baseline_cleaned.dta", clear
 
 	* Collapse so one observation per person
 	*gen one = 1
-	*collapse (first) one, by(english computer total_edu_yrs threetimesnin pid two_seasons)
+	*collapse (first) one, by(english computer total_edu_yrs threetimesnine pid two_seasons)
 
 
 	label var english "Literate in English (=1)"
 	label var computer "Prior Computer Experience (=1)"
 	label var total_edu_yrs "Years of Education"
-	label var threetimesnin "Math Ability (=1)"
+	label var threetimesnine "Math Ability (=1)"
 
-	estpost ttest english computer total_edu_yrs threetimesnin, by(two_seasons)
-	esttab . using "$output/tables/table_a11.rtf", replace  nonum noobs ///
+	estpost ttest english computer total_edu_yrs threetimesnine, by(two_seasons)
+	esttab . using "$output/tables/table_a11.tex", replace  nonum noobs ///
 		cells("mu_1 mu_2 p" "sd_1 sd_2 .") label ///
-		collabels("April-September" "October-March" "p-value 1 = 2")
+		collabels("\textbf{April-September}" "\textbf{October-March}" "\textbf{p-value 1 = 2}")
 
 
 		*cells("mu_1(label(April-September)) mu_2(label(October-March)) p(label(p-value 1 = 2))" ///
