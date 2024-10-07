@@ -57,8 +57,9 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
 	
 
-	esttab * using "$output/tables/table_1.rtf", replace ///
+	esttab * using "$output/tables/table_1.tex", replace ///
 		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations") ///
-		mtitles("Quality Adjusted Output" "Total Number of Entries" "Active Time Typing" "Mistakes (per 100 entries)" "Performance Earnings") ///
-		label noobs nodepvars nocons keep(temperature_c)  mgroups("Dependent Variable is Average Hourly", pattern(1 1 1 1))
+		mtitles("\textbf{\shortstack{Quality\\Adjusted\\Output}}" "\textbf{\shortstack{Total Number\\of Entries}}" "\textbf{\shortstack{Active Typing\\Time}}" "\shortstack{\textbf{Mistakes} (per\\ 100 entries)}" "\textbf{\shortstack{Performance\\Earnings}}") ///
+		label nonote noobs nodepvars nocons keep(temperature_c) nonum ///
+		mgroups("Dependent Variable is \textbf{Average Hourly}", pattern(1 0 0 0 0) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}))
 
