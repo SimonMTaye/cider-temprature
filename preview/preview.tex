@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage{etex} 
+\usepackage[utf8]{inputenc}
+\usepackage[left=2.5cm,top=3cm,right=2.5cm,bottom=3cm, nohead]{geometry}
+\usepackage{graphicx,color,setspace}
+\usepackage{amssymb,amsmath,mathrsfs,amsthm}
+\usepackage{bbm, dsfont}
+\usepackage{subfig}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{ulem}
+\usepackage[all]{xy}
+\usepackage{epstopdf}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{natbib}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{epstopdf}
+\usepackage{lscape}
+\usepackage{longtable}
+\usepackage[figuresleft]{rotating}
+\usepackage{pdflscape}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{comment}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx} % Resizebox
+\usepackage{adjustbox}
+\usepackage{changepage} %Shifts tables
+%\usepackage[document]{ragged2e}
+\usepackage{caption}
+% \usepackage{subcaption}
+% \usepackage{subfigure}
+\usepackage{sectsty}
+% \usepackage{biblatex}
+
+\geometry{
+  a4paper,
+  left=0.5in,
+  right=0.5in,
+  top=1in,
+  bottom=1in
+}
+
+
+
+\newcommand{\showtable}[2]
+    { 
+        \section{#2}
+        \renewcommand{\arraystretch}{1.2}
+        \begin{center}
+            \adjustbox{max width=0.8\textwidth}{%
+                \input{/Users/st2246/Work/Temperature/output/tables/#1}
+            }
+        \end{center}
+    }
+
+
+
+\begin{document}
+
+\showtable{table_growth.tex}{Growth Table - No Lags}
+\showtable{table_growth_w_lag.tex}{Growth Table - Lags}
+\showtable{table_growth_w_lead.tex}{Growth Table - Leads}
+\showtable{table_productivity.tex}{Productivity with N lags}
+
+\showtable{table_1.tex}{Table 1}
+\showtable{table_2.tex}{Table 2}
+\showtable{table_3.tex}{Table 3}
+\showtable{table_a1.tex}{Table a1}
+\showtable{table_a2.tex}{Table a2}
+\showtable{table_a3.tex}{Table a3}
+\showtable{table_a4.tex}{Table a4}
+\showtable{table_a5.tex}{Table a5}
+\showtable{table_a6.tex}{Table a6}
+\showtable{table_a7.tex}{Table a7}
+\showtable{table_a8.tex}{Table a8}
+\showtable{table_a9.tex}{Table a9}
+\showtable{table_a10.tex}{Table a10}
+\showtable{table_a11.tex}{Table a11}
+
+\end{document}

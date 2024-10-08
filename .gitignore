@@ -4,4 +4,9 @@ output
 .DS_STORE
 **/.DS_STORE
 .aider*
-preview
+preview/*.aux
+preview/*_latexmk
+preview/*.fls
+preview/*.log
+preview/*.gz
+preview/*.pdf
