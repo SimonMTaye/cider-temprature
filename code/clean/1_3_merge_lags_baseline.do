@@ -97,12 +97,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		merge m:1 pid using "$data/raw/baseline_cleaned.dta"
 		drop _merge 
 
-		gen english = a15
-		gen computer = a23
 
-		label var english "Literate in English (=1)"
-		label var computer "Prior Computer Experience (=1)"
-		
 		foreach var in temp_1 temp_2 temp_3 temp_4 temp_5 temp_6 temp_7 temp_8 temp_9 temp_10 temp_11 temp_12 temp_13 {
 			
 			gen `var'_workday = `var'
