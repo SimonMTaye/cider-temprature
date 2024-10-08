@@ -74,7 +74,7 @@ use "$data/raw/hourly_productivity.dta", clear
 	drop if _merge==2 
 	drop _merge
 	
-	* TODO: How to handle missing values?
+	// TODO: How to handle missing values?
 	gen round_checkin = round(checkin_time)
 	gen round_checkout = round(checkout_time)
 
