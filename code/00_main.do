@@ -10,31 +10,49 @@ Author:		Simon Taye
 
     
 
-*** Set path variables
+// Set path variables
     local cwd : pwd
-    * If 00_main.do is not being run from within the code folder of the research package, set path to package here
+    // If 00_main.do is not being run from within the code folder of the research package, set path to package here
     global root "`cwd'/.."
+
     global data "$root/data"
     global output "$root/output"
+    global adodir "$root/external/ado"
+
     
-    * Make empty directories that may not exist already
+    // Make empty directories that may not exist already
     cap mkdir "$data/generated"
     cap mkdir "$output"
     cap mkdir "$output/figures"
     cap mkdir "$output/tables"
 
     
-local install_packages_flag 0
-*** Install Required Packages
-    if `install_packages_flag' == 1 {
-        cap ssc install winsor
-        cap ssc install reghdfe
-        cap ssc install outreg2
-        cap ssc install estout
-        cap ssc install swindex
-        cap ssc install binscatter
-    }
 
+// Flags for running cdoe
+//      cleaning_dos generates generated data from raw data
+local cleaning_dos 1
+//      tables runs code to generate all tables
+local tables 1
+//      figures runs code to generate all figures
+local figures 1
+//      set custom figure scheme
+set scheme eop
+
+// Dependency Handling: Ensure all external packages needed are stored
+//      alongside the do files
+
+    // Remove non system adodirs
+    tokenize `"$S_ADO"', parse(";")
+    while `"`1'"' != "" {
+        if (`"`1'"'!="BASE") & (`"`1'"'!="SITE") cap adopath - `"`1'"'
+        macro shift
+    }
+    // Set adoplus manually
+    sysdir set PLUS "$adodir"
+    adopath ++ PLUS
+
+// Raw Data: If first time cloning repository, make sure to extract
+//      raw data from zip
     if !fileexists("$data/raw") {
         if fileexists("$data/raw.zip") {
             cd "$data"
@@ -46,7 +64,6 @@ local install_packages_flag 0
         }
     }
 
-local cleaning_dos 1
 *** Runing cleaning do files
     if `cleaning_dos' == 1 {
         do "$root/code/clean/1_1_temp.do"
@@ -55,16 +72,11 @@ local cleaning_dos 1
         do "$root/code/clean/1_4_merge_pollution.do"
         do "$root/code/clean/1_5_intermediate_vars.do"
         do "$root/code/clean/1_6_merge_cog_ab.do"
+        do "$root/code/clean/1_7_growth_reg_vars.do"
     }
 
 
-*** Common set of table options used in estout
-global esttab_opts label nonote noobs nodepvars nocons nonum se 
 
-*** Run do files for figures and tables
-
-set scheme eop
-local figures 0
     if `figures' == 1 {
         // INFO: Orginially named 'learning.do'
         do "$root/code/figures/2_figure_1.do"
@@ -74,7 +86,11 @@ local figures 0
         do "$root/code/figures/2_figure_a2.do"
     }
 
-local tables 0
+
+// esttab options for tweaking output
+global esttab_opts label nonote noobs nodepvars nocons nonum se 
+
+    if `tables' == 1 {
         do "$root/code/tables/2_table_1.do"
         // INFO: Orginially named 'learning.do'
         do "$root/code/tables/2_table_2.do"
@@ -87,17 +103,21 @@ local tables 0
         // INFO: Orginially part of learning with temp bins.do
         do "$root/code/tables/2_table_a5.do"
         // INFO: Orginially part of abseentism.do
-        do "$root/code/tables2_table_a6.do"
+        do "$root/code/tables/2_table_a6.do"
         // INFO: Orginially part of coginition.do
-        do "$root/code/2_table_a7.do"
+        do "$root/code/tables/2_table_a7.do"
         // INFO: Orginially part of learning.do
-        do "$root/code/2_table_a8.do"
-        do "$root/code/2_table_a9.do"
+        do "$root/code/tables/2_table_a8.do"
+        do "$root/code/tables/2_table_a9.do"
         // INFO: Orginially named 'learning growth rates.do'
-        do "$root/code/2_table_a10.do"
+        do "$root/code/tables/2_table_a10.do"
         // INFO: Originally from "balance.do"
-        do "$root/code/2_table_a11.do"
+        do "$root/code/tables/2_table_a11.do"
     }
 
-* Quit after running
-clear all
+    do "$root/code/2_growth_two_day.do"
+    do "$root/code/2_growth_two_day_temp_lag.do"
+    do "$root/code/2_growth_two_day_temp_lead.do"
+    do "$root/code/2_productivity_lag.do"
+
+
