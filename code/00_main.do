@@ -28,16 +28,6 @@ Author:		Simon Taye
 
     
 
-// Flags for running cdoe
-//      cleaning_dos generates generated data from raw data
-local cleaning_dos 1
-//      tables runs code to generate all tables
-local tables 1
-//      figures runs code to generate all figures
-local figures 1
-//      set custom figure scheme
-set scheme eop
-
 // Dependency Handling: Ensure all external packages needed are stored
 //      alongside the do files
 
@@ -50,6 +40,16 @@ set scheme eop
     // Set adoplus manually
     sysdir set PLUS "$adodir"
     adopath ++ PLUS
+
+// Flags for running cdoe
+//      cleaning_dos generates generated data from raw data
+local cleaning_dos 1
+//      tables runs code to generate all tables
+local tables 0
+//      figures runs code to generate all figures
+local figures 0
+//      set custom figure scheme
+set scheme eop
 
 // Raw Data: If first time cloning repository, make sure to extract
 //      raw data from zip
@@ -115,6 +115,7 @@ global esttab_opts label nonote noobs nodepvars nocons nonum se
         do "$root/code/tables/2_table_a11.do"
     }
 
+    do "$root/code/tables/2_table_a10.do"
     do "$root/code/2_growth_two_day.do"
     do "$root/code/2_growth_two_day_temp_lag.do"
     do "$root/code/2_growth_two_day_temp_lead.do"
