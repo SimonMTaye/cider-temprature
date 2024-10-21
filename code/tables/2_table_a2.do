@@ -59,20 +59,14 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 	table_header "Dependent Variable is \textbf{Average Hourly}" 5
+	local header prehead(`r(header_macro)')
+	model_titles "\textbf{\shortstack{Quality\\Adjusted\\Output}}" "\textbf{\shortstack{Total Number\\of Entries}}" "\textbf{\shortstack{Active Typing\\Time}}" "\shortstack{\textbf{Mistakes} (per\\ 100 entries)}" "\textbf{\shortstack{Performance\\Earnings}}"
+	local titles `r(model_title)'
 
+	
 	#delimit ;
-	esttab * using "$output/tables/table_a2.tex",  replace 
-		$esttab_opts
-		prehead(`r(header_macro)')
-		scalars("mean Dependent Variable Mean" "num_obs Observations" "r2 R-squared" )
-		mgroups("\textbf{\shortstack{Quality Adjusted\\ Output}}" 
-				"\textbf{\shortstack{Total Number of\\ Entries}}" 
-				"\textbf{\shortstack{Active Typing\\ Time}}" 
-				"\shortstack{\textbf{Mistakes} (per 100\\ entries)}" 
-				"\textbf{\shortstack{Performance\\Earnings}}",
-			pattern(1 1 1 1 1)
-			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span})) ;
-
+	esttab * using "$output/tables/table_a2.tex",  replace ///
+		scalars("mean Dependent Variable Mean" "num_obs Observations" "r2 R-squared" ) ///
+		$esttab_opts `header' `titles';
 	#delimit cr;
 

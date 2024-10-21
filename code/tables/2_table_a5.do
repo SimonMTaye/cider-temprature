@@ -42,17 +42,14 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 	table_header "Dependent Variable is" 4
+	local header prehead(`r(header_macro)')
+	model_titles "\shortstack{\textbf{Participant Present}\\(=1)}"  "\textbf{Check-in Time}"  "\textbf{Check-out Time}"  "\shortstack{\textbf{Total Hours of}\\ \textbf{Work}}" 
+	local titles `r(model_title)'
+
 	#delimit ;
-	esttab * using "$output/tables/table_a5.tex",  replace 
-		$esttab_opts
-		prehead(`r(header_macro)')
-		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared")
-		mlabels("\shortstack{\textbf{Participant Present}\\(=1)}" 
-				"\textbf{Check-in Time}" 
-				"\textbf{Check-out Time}" 
-				"\shortstack{\textbf{Total Hours of}\\ \textbf{Work}}" 
-			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span}))  ;
+	esttab * using "$output/tables/table_a5.tex",  replace ///
+		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared") ///
+		$esttab_opts `header' `titles';
 	#delimit cr;
 
 

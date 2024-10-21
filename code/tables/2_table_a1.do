@@ -49,20 +49,14 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	estadd scalar sd = r(sd)
 	eststo
 	
-/*mgroups("\textbf{\shortstack{Quality Adjusted\\ Output}}" 
-				"\textbf{\shortstack{Total Number of\\ Entries}}" 
-				"\textbf{\shortstack{Active Typing\\ Time}}" 
-				"\shortstack{\textbf{Mistakes} (per 100\\ entries)}" 
-				"\textbf{\shortstack{Performance\\Earnings}}", 
-				pattern(1 1 1 1 1) span
-				prefix(\multicolumn{@span}{c}{) suffix(}) 
-				erepeat(\cmidrule(lr){@span}))*/
-
 	table_header "Dependent Variable is \textbf{Average Hourly}" 5
+	local header prehead(`r(header_macro)')
+	model_titles "\textbf{\shortstack{Quality\\Adjusted\\Output}}" "\textbf{\shortstack{Total Number\\of Entries}}" "\textbf{\shortstack{Active Typing\\Time}}" "\shortstack{\textbf{Mistakes} (per\\ 100 entries)}" "\textbf{\shortstack{Performance\\Earnings}}"
+	local titles `r(model_title)'
+
+	
 	#delimit ;
-	esttab * using "$output/tables/table_a1.tex",  replace 
-		$esttab_opts
-		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared" )
-		
-	prehead(`r(header_macro)');
+	esttab * using "$output/tables/table_a1.tex",  replace ///
+		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared" ) ///
+		$esttab_opts `header' `titles';
 	#delimit cr;

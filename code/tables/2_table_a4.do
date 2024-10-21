@@ -54,20 +54,14 @@ use "$data/generated/hi_analysis_hourly.dta", clear
 	eststo
 
 
- 	table_header "Dependent Variable is" 5
+	table_header "Dependent Variable is" 5
+	local header prehead(`r(header_macro)')
+	model_titles "\shortstack{\textbf{Quality Adjusted}\\ \textbf{Output} (per hr)}"  "\shortstack{\textbf{Total Number of}\\ \textbf{Entries} (per hr)}"  "\shortstack{\textbf{Active Typing}\\ \textbf{Time} (min/hr)}"  "\shortstack{\textbf{Mistakes} (per 100\\ entries)}"  "\shortstack{\textbf{Performance}\\\textbf{Earnings} (per hr)}"
+	local titles `r(model_title)'
 
 	#delimit ;
-	esttab * using "$output/tables/table_a4.tex",  replace 
-		$esttab_opts
-		prehead(`r(header_macro)')
-		scalars("mean Dependent Variable Mean" "num_obs Observations" "r2 R-squared")
-		mlabels("\shortstack{\textbf{Quality Adjusted}\\ \textbf{Output} (per hr)}" 
-				"\shortstack{\textbf{Total Number of}\\ \textbf{Entries} (per hr)}" 
-				"\shortstack{\textbf{Active Typing}\\ \textbf{Time} (min/hr)}" 
-				"\shortstack{\textbf{Mistakes} (per 100\\ entries)}" 
-				"\shortstack{\textbf{Performance}\\\textbf{Earnings} (per hr)}"
-			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span}));
-
+	esttab * using "$output/tables/table_a4.tex",  replace ///
+		scalars("mean Dependent Variable Mean" "num_obs Observations" "r2 R-squared") ///
+		$esttab_opts `header' `titles';
 	#delimit cr;
 
