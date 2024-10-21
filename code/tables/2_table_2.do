@@ -75,9 +75,11 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	model_titles "N = No Lags" "N = Three Lags" "N = Four Lags" "N = Five Lags" 
 	local titles `r(model_title)'
 
+	#delimit ;
 	esttab * using "$output/tables/table_2.tex", replace ///
 		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lag 3 to N" "p_value p-value" "num_obs Observations" "r2 R-squared") ///
-		keep(temperature_c) 
-		$esttab_opts `header' `titles';
+		$esttab_opts keep(temperature_c) `header' `titles' ; ///
+	#delimt cr;
+		
 
 
