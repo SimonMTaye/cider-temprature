@@ -51,16 +51,15 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 	table_header "Dependent Variable is \textbf{Average Hourly Quality Adjusted Output}" 3
-
+	local header prehead(`r(header_macro)')
+	model_titles "N = Three Leads" "N = Four Leads" "N = Five Leads"
+	local titles `r(model_title)'
 	#delimit ;
-	esttab * using "$output/tables/table_a9.tex",  replace
-		$esttab_opts keep(temperature_c)
-		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lead 1 to N" "p_value p-value" "mean Dependent Variable Mean" "num_obs Observations" "r2 R-squared") 
-		mlabels("N = Three Leads" "N = Four Leads" "N = Five Leads"
-			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span})) ;
-		prehead(`r(header_macro')
-	#delimit cr 
+	esttab * using "$output/tables/table_a9.tex", replace ///
+		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lead 1 to N" "p_value p-value" "mean Dependent Variable Mean" "num_obs Observations" "r2 R-squared" ) ///
+		keep(temperature_c) ///
+		$esttab_opts `header' `titles';
+	#delimit cr;
 
 
 

@@ -130,18 +130,14 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
 
 	table_header "Dependent Variable:" 8
-	
+	local header prehead(`r(header_macro)')
+	model_titles "\textbf{Participant Present} (=1)" "\textbf{Check-in Time}" "\textbf{Check-out Time}" "\textbf{Total Hours of Work}"
+	local titles `r(model_title)'
 	#delimit ;
-	esttab * using "$output/tables/table_a6.tex",  replace 
-		$esttab_opts
-		prehead(`r(header_macro)')
-		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared" )
-		nomtitles
-		mgroups("\textbf{Participant Present} (=1)" "\textbf{Check-in Time}" "\textbf{Check-out Time}" "\textbf{Total Hours of Work}", 
-			pattern(1 0 1 0 1 0 1 0) 
-			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span})) ; 
-
+	esttab * using "$output/tables/table_a6.tex", replace ///
+		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared" ) ///
+		nomtitles ///
+		$esttab_opts `header' `titles';
 	#delimit cr;
 
 

@@ -76,15 +76,15 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     eststo
 
     table_header "Dependent Variable is \textbf{Growth in Average Hourly Quality Adjusted Output}" 6
-    #delimit ;
-    esttab * using "$output/tables/table_a10.tex",  replace
-        $esttab_opts keep(temp_c_two_days_workday) 
-        scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lead 1 to N" "p_value p-value" "num_obs Observations" "r2 R-squared") 
-        mlabels("\shortstack{Full Study\\ period}" "\shortstack{First half of\\study}" "\shortstack{No Prior\\Computer\\Experience}" "\shortstack{Full study\\ period}" "\shortstack{First half of\\ study}" "\shortstack{No Prior\\Computer\\Experience}"
-            prefix(\multicolumn{@span}{c}{) suffix(}) 
-            span erepeat(\cmidrule(lr){@span})) 
-	    prehead(`r(header_macro')
-    #delimit cr 
+    local header prehead(`r(header_macro)')
+    model_titles "\shortstack{Full Study\\ period}" "\shortstack{First half of\\study}" "\shortstack{No Prior\\Computer\\Experience}" "\shortstack{Full study\\ period}" "\shortstack{First half of\\ study}" "\shortstack{No Prior\\Computer\\Experience}"
+    local titles `r(model_title)'
+	#delimit ;
+	esttab * using "$output/tables/table_a10.tex", replace ///
+		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lead 1 to N" "p_value p-value" "num_obs Observations" "r2 R-squared" ) ///
+		keep(temp_c_two_days_workday) 
+		$esttab_opts `header' `titles';
+	#delimit cr;
 
 
     

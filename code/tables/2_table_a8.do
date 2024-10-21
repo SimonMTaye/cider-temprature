@@ -68,10 +68,12 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		eststo
 
 	table_header "Dependent Variable is Average Quality Adjusted Output (per hour)" 3
-
+	local header prehead(`r(header_macro)')
+	# There are no model titles for this table
+	# local titles `r(model_title)'
 	#delimit ;
-	esttab * using "$output/tables/table_a8.tex",  replace
-		$esttab_opts nomtitles
-		prehead(`r(header_macro)')
-		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared") ;
+	esttab * using "$output/tables/table_a8.tex", replace ///
+		$esttab_opts nomtitles ///
+		prehead(`r(header_macro)') ///
+		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared");
 	#delimit cr;
