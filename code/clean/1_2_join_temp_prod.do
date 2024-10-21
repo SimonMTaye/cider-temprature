@@ -105,7 +105,7 @@ use "$data/raw/hourly_productivity.dta", clear
 		rename `var'_w `var'
 	}
 	
-	label var temperature_c "Temprature (Celsius)"
+	label var temperature_c "Temperature ($^{\circ}C$)"
 
 save "$data/generated/hi_analysis_hourly.dta", replace 
 

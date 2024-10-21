@@ -9,7 +9,7 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all
+eststo clear
 use "$data/generated/hi_analysis_daily.dta", clear 
 
 	label var heat_index "Heat Index"
@@ -49,18 +49,20 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	estadd scalar sd = r(sd)
 	eststo
 	
-	#delimit ;
-	esttab * using "$output/tables/table_a1.tex",  replace 
-		$esttab_opts
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
-		mtitles("\textbf{\shortstack{Quality Adjusted\\ Output}}" 
+/*mgroups("\textbf{\shortstack{Quality Adjusted\\ Output}}" 
 				"\textbf{\shortstack{Total Number of\\ Entries}}" 
 				"\textbf{\shortstack{Active Typing\\ Time}}" 
 				"\shortstack{\textbf{Mistakes} (per 100\\ entries)}" 
-				"\textbf{\shortstack{Performance\\Earnings}}") 
-		mgroups("Dependent Variable is \textbf{Average Hourly}",  
-			pattern(1 0 0 0 0) 
-			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span})) ;
+				"\textbf{\shortstack{Performance\\Earnings}}", 
+				pattern(1 1 1 1 1) span
+				prefix(\multicolumn{@span}{c}{) suffix(}) 
+				erepeat(\cmidrule(lr){@span}))*/
 
+	table_header "Dependent Variable is \textbf{Average Hourly}" 5
+	#delimit ;
+	esttab * using "$output/tables/table_a1.tex",  replace 
+		$esttab_opts
+		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared" )
+		
+	prehead(`r(header_macro)');
 	#delimit cr;

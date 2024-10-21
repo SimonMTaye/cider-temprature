@@ -11,9 +11,11 @@ Author:		Simon Taye
     
 
 // Set path variables
-    local cwd : pwd
-    // If 00_main.do is not being run from within the code folder of the research package, set path to package here
-    global root "`cwd'/.."
+    // Set root path correctly
+    //local cwd : pwd
+    // global root "`cwd'/.."
+    global root "/Users/st2246/Work/Temperature"
+    cd $root
 
     global data "$root/data"
     global output "$root/output"
@@ -43,11 +45,14 @@ Author:		Simon Taye
 
 // Flags for running cdoe
 //      cleaning_dos generates generated data from raw data
-local cleaning_dos 1
+local cleaning_dos 0
 //      tables runs code to generate all tables
-local tables 0
+local tables 1
 //      figures runs code to generate all figures
 local figures 0
+
+// temp macro for running new tables
+local new_tables 0
 //      set custom figure scheme
 set scheme eop
 
@@ -88,17 +93,17 @@ set scheme eop
 
 
 // esttab options for tweaking output
-global esttab_opts label nonote noobs nodepvars nocons nonum se 
 
     if `tables' == 1 {
+        do "$root/code/tables/2_helper.do"
         do "$root/code/tables/2_table_1.do"
         // INFO: Orginially named 'learning.do'
-        do "$root/code/tables/2_table_2.do"
+        *do "$root/code/tables/2_table_2.do"
         do "$root/code/tables/2_table_3.do"
         // INFO: Orignially part of productivity.do
         do "$root/code/tables/2_table_a1.do"
         do "$root/code/tables/2_table_a2.do"
-        do "$root/code/tables/2_table_a3.do"
+        *do "$root/code/tables/2_table_a3.do"
         do "$root/code/tables/2_table_a4.do"
         // INFO: Orginially part of learning with temp bins.do
         do "$root/code/tables/2_table_a5.do"
@@ -115,10 +120,12 @@ global esttab_opts label nonote noobs nodepvars nocons nonum se
         do "$root/code/tables/2_table_a11.do"
     }
 
-    do "$root/code/tables/2_table_a10.do"
-    do "$root/code/2_growth_two_day.do"
-    do "$root/code/2_growth_two_day_temp_lag.do"
-    do "$root/code/2_growth_two_day_temp_lead.do"
-    do "$root/code/2_productivity_lag.do"
+
+    if `new_tables' == 1 {
+        do "$root/code/tables/2_helper.do"
+        do "$root/code/2_growth_two_day_temp_lag.do"
+        do "$root/code/2_growth_two_day_temp_lead.do"
+        do "$root/code/2_productivity_lag.do"
+    }
 
 

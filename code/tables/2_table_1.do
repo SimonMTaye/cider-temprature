@@ -7,10 +7,12 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all
+
 use "$data/generated/hi_analysis_daily.dta", clear 
 *******
-	label var temperature_c "Temperature (Celcius)"
+	eststo clear
+
+	label var temperature_c "Temperature (^{\circ}C)"
 	
 		* average productivity per hour 
 	reghdfe m_quality_output temperature_c, absorb(pid day_in_study month#year) cluster(pid)
@@ -55,11 +57,16 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar num_obs = e(N)
 	eststo
 
-	
+	table_header "Dependent Variable is \textbf{Average Hourly}" 5
+	local header prehead(`r(header_macro)')
+	model_titles "\textbf{\shortstack{Quality\\Adjusted\\Output}}" "\textbf{\shortstack{Total Number\\of Entries}}" "\textbf{\shortstack{Active Typing\\Time}}" "\shortstack{\textbf{Mistakes} (per\\ 100 entries)}" "\textbf{\shortstack{Performance\\Earnings}}"
+	local titles `r(model_title)'
 
+	
+	#delimit ;
 	esttab * using "$output/tables/table_1.tex", replace ///
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations") ///
-		mtitles("\textbf{\shortstack{Quality\\Adjusted\\Output}}" "\textbf{\shortstack{Total Number\\of Entries}}" "\textbf{\shortstack{Active Typing\\Time}}" "\shortstack{\textbf{Mistakes} (per\\ 100 entries)}" "\textbf{\shortstack{Performance\\Earnings}}") ///
-		keep(temperature_c) $esttab_opts ///
-		mgroups("Dependent Variable is \textbf{Average Hourly}", pattern(1 0 0 0 0) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}))
+		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared" ) ///
+		keep(temperature_c) 
+		$esttab_opts `header' `titles';
+	#delimit cr;
 

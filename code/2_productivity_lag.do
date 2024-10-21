@@ -31,26 +31,27 @@ use "$data/generated/hi_analysis_daily.dta", clear
     local p_test_1    ""
     local dep_var_lag_1 "No"
 
-    local indep_var_2 temperature_c l1_temperature_c
-    local p_test_2    "_b[l1_temperature_c]"
-    local dep_var_lag_2 "No"
-
-    local indep_var_3 temperature_c l1_temperature_c l2_temperature_c
-    local p_test_3    "_b[l1_temperature_c] + _b[l2_temperature_c]"
+    local indep_var_3 temperature_c l1_temperature_c
+    local p_test_3    "_b[l1_temperature_c]"
     local dep_var_lag_3 "No"
 
-    local indep_var_4 temperature_c l1_temperature_c l2_temperature_c l3_temperature_c
-    local p_test_4    "_b[l1_temperature_c] + _b[l2_temperature_c] + _b[l3_temperature_c]"
-    local dep_var_lag_4 "No"
+    local indep_var_5 temperature_c l1_temperature_c l2_temperature_c
+    local p_test_5    "_b[l1_temperature_c] + _b[l2_temperature_c]"
+    local dep_var_lag_5 "No"
+
+    local indep_var_7 temperature_c l1_temperature_c l2_temperature_c l3_temperature_c
+    local p_test_7    "_b[l1_temperature_c] + _b[l2_temperature_c] + _b[l3_temperature_c]"
+    local dep_var_lag_7 "No"
 
     * Second half of the table is simply the first half + Control for lagged dep_var
-    forvalues i=5/8 {
+    forvalues i=1/4 {
         * Get the corresponding column from the first half of the table
-        local j = `i' - 4
+        local j = `i' * 2
+        local k = `j' - 1
 
-        local indep_var_`i' `indep_var_`j'' l.`dep_var'
-        local p_test_`i' `p_test_`j''
-        local dep_var_lag_`i' "Yes"
+        local indep_var_`j' `indep_var_`k'' l.`dep_var'
+        local p_test_`j' `p_test_`k''
+        local dep_var_lag_`j' "Yes"
     }
 
     * Run regressions based on specifications above
@@ -77,20 +78,20 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
     #delimit ;
     esttab * using "$output/tables/table_productivity.tex", replace 
-        scalars("p_value p-value Sum of Lagged Temperature = 0" 
-                "dep_var_lag Control for Lag of Dep. Var"  
-                "mean Dep. Var. Mean"
-                "num_obs Observations" 
-                "r2 R-squared") 
-        mtitles("N = 0" 
-                "N = 1" 
-                "N = 2" 
-                "N = 3"
-                "N = 0"
-                "N = 1"
-                "N = 2"
-                "N = 3"
-                ) 
+		prehead("{\begin{tabular}{l*{8}{c}} \toprule & \multicolumn{8}{c}{Dependent Variable: \textbf{Productivity}} \\[0.5em]")
+        scalars( 
+            "dep_var_lag Control for Lag of Dependent Variable" 
+            "mean Dependent Variable Mean"
+            "num_obs Observations" 
+            "r2 R-squared") 
+        mgroups(
+            "N = 0 Lags" 
+            "N = 1 Lag" 
+            "N = 2 Lags" 
+            "N = 3 Lags",
+            pattern(1 0 1 0 1 0 1 0)
+            prefix(\multicolumn{@span}{c}{) suffix(})
+            span erepeat(\cmidrule(lr){@span})) 
         $esttab_opts keep(`indep_var_1') ;
     #delimit cr;
 

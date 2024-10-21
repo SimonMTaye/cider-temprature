@@ -9,9 +9,9 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all
 use "$data/generated/hi_analysis_daily.dta", clear 
 
+	eststo clear
 	reghdfe at_present_check temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		sum at_present_check if e(sample)==1
 		estadd scalar num_obs = e(N)
@@ -41,19 +41,18 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar sd = r(sd)
 	eststo
 
+	table_header "Dependent Variable is" 4
 	#delimit ;
 	esttab * using "$output/tables/table_a5.tex",  replace 
 		$esttab_opts
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
-		mtitles("\shortstack{\textbf{Participant Present}\\(=1)}" 
+		prehead(`r(header_macro)')
+		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared")
+		mlabels("\shortstack{\textbf{Participant Present}\\(=1)}" 
 				"\textbf{Check-in Time}" 
 				"\textbf{Check-out Time}" 
-				"\shortstack{\textbf{Total Hours of}\\ \textbf{Work}}" )
-		mgroups("Dependent Variable is",  
-			pattern(1 0 0 0) 
+				"\shortstack{\textbf{Total Hours of}\\ \textbf{Work}}" 
 			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span})) ; 
-
+			span erepeat(\cmidrule(lr){@span}))  ;
 	#delimit cr;
 
 

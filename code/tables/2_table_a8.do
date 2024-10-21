@@ -7,8 +7,9 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all 
 use "$data/generated/hi_analysis_daily.dta", clear 
+
+	eststo clear
 	* learning for quality output 
 	gen last_half = 0 
 	replace last_half = 1 if day_in_study>14
@@ -66,13 +67,11 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar sd = r(sd)
 		eststo
 
+	table_header "Dependent Variable is Average Quality Adjusted Output (per hour)" 3
+
 	#delimit ;
 	esttab * using "$output/tables/table_a8.tex",  replace
 		$esttab_opts nomtitles
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
-		mgroups("Dependent Variable is Average Quality Adjusted Output (per hour)",
-			pattern(1 0 0) 
-			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span})) ; 
-
+		prehead(`r(header_macro)')
+		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared") ;
 	#delimit cr;

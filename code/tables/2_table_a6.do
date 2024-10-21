@@ -25,11 +25,10 @@ Changes:
 ****************************************************************/
 * absenteeism, checkin / checkout time 
 	
-	
-clear all 
 use "$data/generated/hi_analysis_daily.dta", clear 
 
 
+	eststo clear
 	
 	/*
 	// Code from archive/absenteeism.do
@@ -55,7 +54,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	gen lower_temp	= low*temperature_c
 
 	
-	label var l1_temperature_c "Temperature Lag"
+	label var l1_temperature_c "Lag 1 of Temperature"
 	label var high_temp "High Temperature (=1)"
 	label var medium_temp "Medium Temperature (=1)"
 	label var lower_temp "Low Temperature (=1)"
@@ -130,16 +129,18 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 
+	table_header "Dependent Variable:" 8
 	
 	#delimit ;
 	esttab * using "$output/tables/table_a6.tex",  replace 
 		$esttab_opts
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
+		prehead(`r(header_macro)')
+		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared" )
 		nomtitles
 		mgroups("\textbf{Participant Present} (=1)" "\textbf{Check-in Time}" "\textbf{Check-out Time}" "\textbf{Total Hours of Work}", 
 			pattern(1 0 1 0 1 0 1 0) 
 			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span) ; 
+			span erepeat(\cmidrule(lr){@span})) ; 
 
 	#delimit cr;
 

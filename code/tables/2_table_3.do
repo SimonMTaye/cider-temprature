@@ -8,8 +8,8 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all 
 use "$data/generated/hi_analysis_daily.dta", clear 
+	eststo clear
 *** beg vs end table 
 	xtset pid day_in_study
 	* genearte lag outputs
@@ -74,14 +74,17 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar p_value = r(p)
 	eststo
 
+	table_header "Dependent Variable: \textbf{Average Hourly Quality Adjust Output}" 4
+	local header prehead(`r(header_macro)')
+	model_titles "\shortstack{First Half of\\ the Study}" "\shortstack{Second Half of\\ the Study}"  "\shortstack{No Prior\\ Computer Ability}"  "\shortstack{Prior Computer\\ Ability}"
+	local titles `r(model_title)'
+
+	#delimit ;
 	esttab * using "$output/tables/table_3.tex", replace ///
 		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lag 3 to N" "p_value p-value" "num_obs Observations" "r2 R-squared") ///
-		mtitles("\shortstack{First Half of\\ the Study}" "\shortstack{Second Half of\\ the Study}" "\shortstack{No Prior\\ Computer Ability}" "\shortstack{Prior Computer\\ Ability}") ///
-		$esttab_opts keep(temperature_c) ///
-		mgroups("Dependent Variable is \textbf{Average Hourly Quality Adjust Output}",  ///
-			pattern(1 0 0 0) ///
-			prefix(\multicolumn{@span}{c}{) suffix(}) ///
-			span erepeat(\cmidrule(lr){@span})) ///
+		$esttab_opts keep(temperature_c) `header' `titles' ; ///
+		
+	#delimit cr;
 
 
 

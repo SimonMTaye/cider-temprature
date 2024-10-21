@@ -73,19 +73,21 @@ save "$data/generated/hi_analysis_daily.dta", replace
     sort pid two_days
 
     gen diff_quality_output_two_days = quality_output_two_days - quality_output_two_days[_n-1]
+    replace diff_quality_output_two_days = quality_output_two_days - quality_output_two_days[_n-2] if diff_quality_output_two_days == .
+     
     replace diff_quality_output_two_days=. if two_days==1
     gen growth_quality_output_two_days = diff_quality_output_two_days/quality_output_two_days[_n-1]
     
     label var growth_quality_output_two_days "Productivity growth"
-    label var temp_c_two_days "Temperature (Avg of last 2 days)"
+    label var temp_c_two_days "Temperature (^{\circ}C)"
 
-    label var l1_temp_c_two_days "1 period lag of Temperature"
-    label var l2_temp_c_two_days "2 period lag of Temperature"
-    label var l3_temp_c_two_days "3 period lag of Temperature"
+    label var l1_temp_c_two_days "Lag 1 of Temperature"
+    label var l2_temp_c_two_days "Lag 2 of Temperature"
+    label var l3_temp_c_two_days "Lag 3 of Temperature"
 
-    label var ld1_temp_c_two_days "1 period lead of Temperature"
-    label var ld2_temp_c_two_days "2 period lead of Temperature"
-    label var ld3_temp_c_two_days "3 period lead of Temperature"
+    label var ld1_temp_c_two_days "Lead 1 of Temperature"
+    label var ld2_temp_c_two_days "Lead 2 of Temperature"
+    label var ld3_temp_c_two_days "Lead 3 of Temperature"
 
 
 

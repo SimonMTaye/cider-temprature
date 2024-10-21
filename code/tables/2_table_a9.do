@@ -12,9 +12,9 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all 
 use "$data/generated/hi_analysis_daily.dta", clear 
 	xtset pid day_in_study
+	eststo clear
 	
 	reghdfe m_quality_output temperature_c ld1_temperature_c ld2_temperature_c ld3_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		summ m_quality_output if e(sample) == 1 
@@ -50,16 +50,16 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar p_value = r(p)
 	eststo
 
+	table_header "Dependent Variable is \textbf{Average Hourly Quality Adjusted Output}" 3
+
 	#delimit ;
 	esttab * using "$output/tables/table_a9.tex",  replace
 		$esttab_opts keep(temperature_c)
-		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lead 1 to N" "p_value p-value" "mean Dependent Variable Mean" "r2 R-squared" "num_obs Observations") 
-		mtitles("N = Three Leads" "N = Four Leads" "N = Five Leads") 
-		mgroups("Dependent Variable is \textbf{Average Hourly Quality Adjusted Output}",
-			pattern(1 0 0) 
+		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lead 1 to N" "p_value p-value" "mean Dependent Variable Mean" "num_obs Observations" "r2 R-squared") 
+		mlabels("N = Three Leads" "N = Four Leads" "N = Five Leads"
 			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span})) ; 
-
+			span erepeat(\cmidrule(lr){@span})) ;
+		prehead(`r(header_macro')
 	#delimit cr 
 
 

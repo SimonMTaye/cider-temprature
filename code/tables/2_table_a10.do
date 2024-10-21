@@ -8,16 +8,14 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-//INFO: Switched from outreg2 to esttab to get formatting to work correctly
-
-clear all
 * learning with growth rates
 use "$data/generated/hi_analysis_twoday.dta", clear 
 
 
+	eststo clear
     xtset pid two_days
 
-    label var temp_c_two_days_workday "Temperature (Celcius)"
+    label var temp_c_two_days_workday "Temperature (^{\circ}C)"
     
     * contemporaneous 
     
@@ -77,15 +75,15 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         estadd scalar p_value = r(p)
     eststo
 
+    table_header "Dependent Variable is \textbf{Growth in Average Hourly Quality Adjusted Output}" 6
     #delimit ;
     esttab * using "$output/tables/table_a10.tex",  replace
         $esttab_opts keep(temp_c_two_days_workday) 
-        scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lead 1 to N" "p_value p-value" "r2 R-squared" "num_obs Observations") 
-        mtitles("\shortstack{Full Study\\ period}" "\shortstack{First half of\\study}" "\shortstack{No Prior\\Computer\\Experience}" "\shortstack{Full study\\ period}" "\shortstack{First half of\\ study}" "\shortstack{No Prior\\Computer\\Experience}") ///
-        mgroups("Dependent Variable is \textbf{Growth in Average Hourly Quality Adjusted Output}",
-            pattern(1 0 0 0 0 0) 
+        scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lead 1 to N" "p_value p-value" "num_obs Observations" "r2 R-squared") 
+        mlabels("\shortstack{Full Study\\ period}" "\shortstack{First half of\\study}" "\shortstack{No Prior\\Computer\\Experience}" "\shortstack{Full study\\ period}" "\shortstack{First half of\\ study}" "\shortstack{No Prior\\Computer\\Experience}"
             prefix(\multicolumn{@span}{c}{) suffix(}) 
-            span erepeat(\cmidrule(lr){@span})) ; 
+            span erepeat(\cmidrule(lr){@span})) 
+	    prehead(`r(header_macro')
     #delimit cr 
 
 

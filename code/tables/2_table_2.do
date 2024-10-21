@@ -12,10 +12,13 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all 
 use "$data/generated/hi_analysis_daily.dta", clear 
+
+	eststo clear
+
 	* controlling for lags of depvar 
 	xtset pid day_in_study
+
 	
 	* replacing missings with previous lags
 	gen lag_output = l.m_quality_output
@@ -67,13 +70,15 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar p_value = r(p)
 	eststo
 
+	table_header "Dependent Variable is \textbf{Average Hourly Quality Adjust Output}" 4
+	local header prehead(`r(header_macro)')
+	model_titles "N = No Lags" "N = Three Lags" "N = Four Lags" "N = Five Lags"
+	local titles `r(model_title)'
+
+
 	esttab * using "$output/tables/table_2.tex", replace ///
 		scalars("coeff_sum Sum of Lagged Temperature Coefficients, Lag 3 to N" "p_value p-value" "num_obs Observations" "r2 R-squared") ///
-		mtitles("N = No Lags" "N = Three Lags" "N = Four Lags" "N = Five Lags") ///
-		$esttab_opts keep(temperature_c)  ///
-		mgroups("Dependent Variable is \textbf{Average Hourly Quality Adjust Output}",  ///
-			pattern(1 0 0 0) ///
-			prefix(\multicolumn{@span}{c}{) suffix(}) ///
-			span erepeat(\cmidrule(lr){@span})) ///
+		$esttab_opts keep(temperature_c) `header' `titles' ///
+		
 
 

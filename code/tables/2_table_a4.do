@@ -9,10 +9,11 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all
 use "$data/generated/hi_analysis_hourly.dta", clear 
 
-	label var temperature_c "Temperature (Celcius)"
+	eststo clear
+
+	label var temperature_c "Temperature (^{\circ}C)"
 
 	
 	reghdfe quality_output temperature_c, absorb(pid day_in_study time_india month#year) cluster(pid)
@@ -52,19 +53,21 @@ use "$data/generated/hi_analysis_hourly.dta", clear
 	estadd scalar sd = r(sd)
 	eststo
 
+
+ 	table_header "Dependent Variable is" 5
+
 	#delimit ;
 	esttab * using "$output/tables/table_a4.tex",  replace 
 		$esttab_opts
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
-		mtitles("\shortstack{\textbf{Quality Adjusted}\\ \textbf{Output} (per hr)}" 
+		prehead(`r(header_macro)')
+		scalars("mean Dependent Variable Mean" "num_obs Observations" "r2 R-squared")
+		mlabels("\shortstack{\textbf{Quality Adjusted}\\ \textbf{Output} (per hr)}" 
 				"\shortstack{\textbf{Total Number of}\\ \textbf{Entries} (per hr)}" 
 				"\shortstack{\textbf{Active Typing}\\ \textbf{Time} (min/hr)}" 
 				"\shortstack{\textbf{Mistakes} (per 100\\ entries)}" 
-				"\shortstack{\textbf{Performance}\\\textbf{Earnings} (per hr)}") 
-		mgroups("Dependent Variable is",  
-			pattern(1 0 0 0 0) 
+				"\shortstack{\textbf{Performance}\\\textbf{Earnings} (per hr)}"
 			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span})); 
+			span erepeat(\cmidrule(lr){@span}));
 
 	#delimit cr;
 

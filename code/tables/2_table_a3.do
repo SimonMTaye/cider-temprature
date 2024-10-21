@@ -9,10 +9,10 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all
+eststo clear
 use "$data/generated/hi_analysis_daily.dta", clear 
 
-	label var temperature_c "Temperature (Celcius)"
+	label var temperature_c "Temperature (^{\circ}C)"
 
 	reghdfe quality_output temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		summ quality_output if e(sample) == 1 
@@ -55,19 +55,19 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 	
 
+ 	table_header "Dependent Variable is", 5
+
 	#delimit ;
 	esttab * using "$output/tables/table_a3.tex",  replace 
 		$esttab_opts
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
-		mtitles("\shortstack{\textbf{Quality Adjusted}\\ \textbf{Output} (per day)}" 
+		prehead(`r(header_macro)')
+		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared")
+		mgroups("\shortstack{\textbf{Quality Adjusted}\\ \textbf{Output} (per day)}" 
 				"\shortstack{\textbf{Total Number of}\\ \textbf{Entries} (per day)}" 
 				"\shortstack{\textbf{Active Typing}\\ \textbf{Time} (min/day)}" 
 				"\shortstack{\textbf{Mistakes} (per 100\\ entries)}" 
-				"\shortstack{\textbf{Performance}\\\textbf{Earnings} (per day)}") 
-		mgroups("Dependent Variable is",  
-			pattern(1 0 0 0 0) 
-			prefix(\multicolumn{@span}{c}{) suffix(}) 
-			span erepeat(\cmidrule(lr){@span})); 
-
+				"\shortstack{\textbf{Performance}\\\textbf{Earnings} (per day)}"
+				prefix(\multicolumn{@span}{c}{) suffix(}) 
+				span erepeat(\cmidrule(lr){@span}));
 	#delimit cr;
 

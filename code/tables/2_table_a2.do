@@ -9,11 +9,10 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-
-clear all
+eststo clear
 use "$data/generated/hi_analysis_daily.dta", clear 
 *******
-	label var temperature_c "Temperature (Celcius)"
+	label var temperature_c "Temperature (^{\circ}C)"
 	label var PM25		"PM 2.5"
 	
 	* average productivity per hour 
@@ -59,18 +58,19 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar num_obs = e(N)
 	eststo
 
+	table_header "Dependent Variable is \textbf{Average Hourly}" 5
 
 	#delimit ;
 	esttab * using "$output/tables/table_a2.tex",  replace 
 		$esttab_opts
-		scalars("mean Dependent Variable Mean"  "r2 R-squared" "num_obs Observations")
-		mtitles("\textbf{\shortstack{Quality Adjusted\\ Output}}" 
+		prehead(`r(header_macro)')
+		scalars("mean Dependent Variable Mean" "num_obs Observations" "r2 R-squared" )
+		mgroups("\textbf{\shortstack{Quality Adjusted\\ Output}}" 
 				"\textbf{\shortstack{Total Number of\\ Entries}}" 
 				"\textbf{\shortstack{Active Typing\\ Time}}" 
 				"\shortstack{\textbf{Mistakes} (per 100\\ entries)}" 
-				"\textbf{\shortstack{Performance\\Earnings}}") 
-		mgroups("Dependent Variable is \textbf{Average Hourly}",  
-			pattern(1 0 0 0 0) 
+				"\textbf{\shortstack{Performance\\Earnings}}",
+			pattern(1 1 1 1 1)
 			prefix(\multicolumn{@span}{c}{) suffix(}) 
 			span erepeat(\cmidrule(lr){@span})) ;
 

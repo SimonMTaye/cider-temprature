@@ -64,13 +64,17 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
 	#delimit ;
     esttab * using "$output/tables/table_growth_w_lead.tex", replace 
+		prehead("{\begin{tabular}{l*{4}{c}} \toprule & \multicolumn{4}{c}{Dependent Variable: \textbf{Productivity Growth}} \\[0.5em]")
         scalars(
             "p_value p-value for Sum of Lead Temprature = 0" 
-            "dep_var_lag Control for Lag of Dep. Var" 
-            "mean Dep. Var. Mean"
+            "dep_var_lag Control for Lag of Dependent Variable" 
+            "mean Dependent Variable Mean"
             "num_obs Observations" "r2 R-squared"
         ) 
-        mtitles("" "" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}") ///
+        mgroups("Full Sample" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", 
+            pattern(1 0 1 1)
+            prefix(\multicolumn{@span}{c}{) suffix(})
+            span erepeat(\cmidrule(lr){@span})) 
         $esttab_opts keep(temp_c_two_days) ;
         
 	#delimit cr;
