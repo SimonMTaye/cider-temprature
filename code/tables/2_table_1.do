@@ -12,8 +12,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
 *******
 	eststo clear
 
-	label var temperature_c "Temperature (^{\circ}C)"
-	
 		* average productivity per hour 
 	reghdfe m_quality_output temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		summ m_quality_output if e(sample) == 1 

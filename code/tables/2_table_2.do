@@ -16,6 +16,8 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
 	eststo clear
 
+	// TODO Broken output
+
 	* controlling for lags of depvar 
 	xtset pid day_in_study
 

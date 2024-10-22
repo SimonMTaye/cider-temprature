@@ -12,6 +12,7 @@ Modified By:	Simon Taye
 use "$data/generated/hi_analysis_daily.dta", clear 
 
 	eststo clear
+	// TODO Fix scalar formatting
 
 	reghdfe cognitive_index temperature_c, absorb(pid day_in_study month#year) cluster (pid) 
 		sum cognitive_index if e(sample)==1
@@ -52,5 +53,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	#delimit ;
 	esttab * using "$output/tables/table_a7.tex", replace ///
 		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared") ///
+		sfmt("%5.2f" "%5.0f" "%5.3f") ///
 		$esttab_opts `header' `titles';
 	#delimit cr;

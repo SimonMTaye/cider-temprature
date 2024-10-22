@@ -15,7 +15,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 	eststo clear
     xtset pid two_days
 
-    label var temp_c_two_days_workday "Temperature (^{\circ}C)"
+    label var temp_c_two_days_workday "Temperature ($^{\circ}C$)"
     
     * contemporaneous 
     

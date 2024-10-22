@@ -64,6 +64,13 @@ use "$data/generated/hi_analysis_daily.dta", clear
     * generate workday var used by table a10
     egen temp_c_two_days_workday = mean(temp_12_workday), by(pid two_days)
 
+    label var l1_temperature_c "Lag 1 of Temperature"
+    label var l2_temperature_c "Lag 2 of Temperature"
+    label var l3_temperature_c "Lag 3 of Temperature"
+
+    label var ld1_temperature_c "Lead 1 of Temperature"
+    label var ld2_temperature_c "Lead 2 of Temperature"
+    label var ld3_temperature_c "Lead 3 of Temperature"
 
 save "$data/generated/hi_analysis_daily.dta", replace
 
@@ -79,7 +86,7 @@ save "$data/generated/hi_analysis_daily.dta", replace
     gen growth_quality_output_two_days = diff_quality_output_two_days/quality_output_two_days[_n-1]
     
     label var growth_quality_output_two_days "Productivity growth"
-    label var temp_c_two_days "Temperature (^{\circ}C)"
+    label var temp_c_two_days "Temperature ($^{\circ}C$)"
 
     label var l1_temp_c_two_days "Lag 1 of Temperature"
     label var l2_temp_c_two_days "Lag 2 of Temperature"

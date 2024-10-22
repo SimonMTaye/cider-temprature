@@ -56,25 +56,29 @@ use "$data/generated/hi_analysis_twoday.dta", clear
             * Store 
             estadd local dep_var_lag = "`dep_var_lag_`i''"
             * Check
-            test _b[ld1_temp_c_two_days] + _b[ld2_temp_c_two_days] + _b[ld3_temp_c_two_days] = 0 
+            local coeff_sum _b[ld1_temp_c_two_days] + _b[ld2_temp_c_two_days] + _b[ld3_temp_c_two_days] 
+            estadd scalar c_sum = `coeff_sum'
+            test `coeff_sum' = 0 
             estadd scalar p_value = r(p)
 
         eststo model_`i'
     }
 
+
+	table_header "Dependent Variable: \textbf{Productivity Growth}" 4
+	local header prehead(`r(header_macro)')
+model_titles "Full Sample" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", pattern("1 0 1 1")
+
 	#delimit ;
     esttab * using "$output/tables/table_growth_w_lead.tex", replace 
-		prehead("{\begin{tabular}{l*{4}{c}} \toprule & \multicolumn{4}{c}{Dependent Variable: \textbf{Productivity Growth}} \\[0.5em]")
+        `header'
         scalars(
+            "c_sum Sum of Lead Temperature Coefficents"
             "p_value p-value for Sum of Lead Temprature = 0" 
             "dep_var_lag Control for Lag of Dependent Variable" 
             "mean Dependent Variable Mean"
             "num_obs Observations" "r2 R-squared"
         ) 
-        mgroups("Full Sample" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", 
-            pattern(1 0 1 1)
-            prefix(\multicolumn{@span}{c}{) suffix(})
-            span erepeat(\cmidrule(lr){@span})) 
-        $esttab_opts keep(temp_c_two_days) ;
+        $esttab_opts keep(`indep_var_1');
         
 	#delimit cr;

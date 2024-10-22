@@ -92,6 +92,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
             pattern(1 0 1 0 1 0 1 0)
             prefix(\multicolumn{@span}{c}{) suffix(})
             span erepeat(\cmidrule(lr){@span})) 
-        $esttab_opts keep(`indep_var_1') ;
+        $esttab_opts keep(`indep_var_7');
     #delimit cr;
 

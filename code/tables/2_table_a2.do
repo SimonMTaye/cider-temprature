@@ -11,8 +11,6 @@ Modified By:	Simon Taye
 ****************************************************************/
 eststo clear
 use "$data/generated/hi_analysis_daily.dta", clear 
-*******
-	label var temperature_c "Temperature (^{\circ}C)"
 	label var PM25		"PM 2.5"
 	
 	* average productivity per hour 

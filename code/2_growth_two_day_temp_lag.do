@@ -14,7 +14,6 @@ Note: Original file you shared had the unlagged temprature when check for p-valu
 /// Panel A -> No lag
 use "$data/generated/hi_analysis_twoday.dta", clear
     
-    label var temp_c_two_days "Temperature (^{\circ}C)"
     eststo clear
 
     drop if max_absents == 1
@@ -62,7 +61,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
             pattern(1 0 1 1)
             prefix(\multicolumn{@span}{c}{) suffix(})
             span erepeat(\cmidrule(lr){@span})) 
-        $esttab_opts keep(`indep_var_1') ;
+        $esttab_opts_fragment keep(`indep_var_1') ;
         
 	#delimit cr;
 
@@ -130,8 +129,6 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     esttab * using "$output/tables/table_growth_w_lag.tex", append 
         fragment nomtitle nonum
 		posthead("\hspace{2mm} \textit{Panel B: Temprature Lags} & & & &\\[0.5em]")
-        prefoot("[0.5em] \hline")
-		postfoot("\bottomrule \end{tabular}")
         scalars(
             "c_sum Sum of Temperature Coefficents"
             "p_value p-value for Temperature Coefficents = 0"

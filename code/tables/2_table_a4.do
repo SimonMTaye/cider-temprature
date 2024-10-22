@@ -13,9 +13,6 @@ use "$data/generated/hi_analysis_hourly.dta", clear
 
 	eststo clear
 
-	label var temperature_c "Temperature (^{\circ}C)"
-
-	
 	reghdfe quality_output temperature_c, absorb(pid day_in_study time_india month#year) cluster(pid)
 		summ quality_output if e(sample) == 1 
 		estadd scalar num_obs = e(N)
