@@ -20,28 +20,45 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
     xtset pid two_days
 
-
     local dep_var growth_quality_output_two_days
     local se_spec absorb(pid two_days month#year) cluster(pid)
+    local indep_vars temp_c_two_days 
+    local indep_vars_lag `indep_vars' l.growth_quality_output_two_days
+    local base_condition two_days>2 //& two_days<8 
 
-    local condition_1 two_days<8
-    local indep_var_1 temp_c_two_days
+    // Full study with no lag
+    local condition_1 `base_condition'
+    local indep_var_1 `indep_vars'
     local dep_var_lag_1 "No"
 
-    local condition_2 `condition_1'
-    local indep_var_2 temp_c_two_days l.growth_quality_output_two_days
+    // Full study with lag
+    local condition_2   `base_condition'
+    local indep_var_2   `indep_vars_lag'
     local dep_var_lag_2 "Yes"
 
-    local condition_3 two_days<8 & computer==0
-    local indep_var_3 `indep_var_2'
+    // First half with no lag
+    local condition_3   `base_condition' & first_half == 1
+    local indep_var_3  `indep_vars_lag'
     local dep_var_lag_3 "Yes"
 
-    local condition_4 two_days<8 & computer==1
-    local indep_var_4 `indep_var_2'
+    // Second half with no lag
+    local condition_4  `base_condition' & first_half == 0
+    local indep_var_4   `indep_vars_lag' 
     local dep_var_lag_4 "Yes"
 
-    * Run regression based on specification defined in macros above
-    forvalues i=1/4 {
+
+    // No Prior Computer Experience
+    local condition_5 `base_condition' & computer==0 
+    local indep_var_5 `indep_vars_lag'
+    local dep_var_lag_5 "Yes"
+
+    // Prior Computer Experience
+    local condition_6 `base_condition' & computer==1 
+    local indep_var_6 `indep_vars_lag'
+    local dep_var_lag_6 "Yes"
+
+     * Run regression based on specification defined in macros above
+    forvalues i=1/6 {
         reghdfe `dep_var' `indep_var_`i'' if `condition_`i'', `se_spec'
             summ `dep_var' //if e(sample) == 1 
             estadd scalar mean = r(mean) 
@@ -52,55 +69,42 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     }
 
     * Output table
+    table_header  "Dependent Variable: \textbf{Productivity Growth}" 6
+	local header prehead(`r(header_macro)')
+
+    model_titles "Full Sample" "\shortstack{First Half\\ of Study}" "\shortstack{Second Half\\ of Study}" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", pattern(1 0 1 1 1 1)
+    local title `r(model_title)'
+
 	#delimit ;
     esttab * using "$output/tables/table_growth_w_lag.tex", replace 
         fragment nomtitle
-		prehead("\begin{tabular}{l*{4}{c}} \toprule & \multicolumn{4}{c}{Dependent Variable: \textbf{Productivity Growth}} \\[0.5em]")
-		posthead("\hline \\ \hspace{2mm} \textit{Panel A: No lags} & & & &\\[0.5em]")
-        mgroups("Full Sample" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", 
-            pattern(1 0 1 1)
-            prefix(\multicolumn{@span}{c}{) suffix(})
-            span erepeat(\cmidrule(lr){@span})) 
+        `header' `title'
+		posthead("\hline \\ \hspace{2mm} \textit{Panel A: No lags} & & & & & &\\[0.5em]")
         $esttab_opts_fragment keep(`indep_var_1') ;
-        
 	#delimit cr;
 
-/// Panel B -> Lag
+/// Panel B -> Same regressions w/ Lag
     eststo clear
-    // Define regression specifications here
-    //  * dep_var -> dependent variable which is constant for all regs
-    //  * se_spec -> clustering and FE which is constant
+    local indep_vars temp_c_two_days l1_temp_c_two_days l2_temp_c_two_days l3_temp_c_two_days 
+    local indep_vars_lag `indep_vars' l.growth_quality_output_two_days
 
-    //  * condition_`i' -> Sample condition for regression i
-    //  * indep_var_`i' -> Explanatory variable for regression i
-    //  * dep_var_lag_`i' -> Indicator for whether regression i controls for lagged depedent variable
+    local indep_var_1   `indep_vars'
 
-    local dep_var growth_quality_output_two_days
-    local se_spec absorb(pid two_days month#year) cluster(pid)
+    local indep_var_2   `indep_vars_lag'
 
-    local condition_1 two_days>2 & two_days<8
-    local indep_var_1 temp_c_two_days l1_temp_c_two_days l2_temp_c_two_days l3_temp_c_two_days 
-    local dep_var_lag_1 "No"
+    local indep_var_3   `indep_vars_lag'
 
-    local condition_2 `condition_1'
-    local indep_var_2 `indep_var_1' l.growth_quality_output_two_days
-    local dep_var_lag_2 "Yes"
+    local indep_var_4   `indep_vars_lag' 
 
-    local condition_3 two_days>2 & two_days<8 & computer==0 
-    local indep_var_3 `indep_var_2'
-    local dep_var_lag_3 "Yes"
+    local indep_var_5   `indep_vars_lag'
 
-    local condition_4 two_days>2 & two_days<8 & computer==1 
-    local indep_var_4 `indep_var_2'
-    local dep_var_lag_4 "Yes"
-
-    xtset pid two_days
+    local indep_var_6   `indep_vars_lag'
 
     // Macros for storing custom row to display coefficient sum
     local sum_row "[1em] Sum of Temperature Coefficents&"
     local pval_row "&"
 
-    forvalues i=1/4 {
+    forvalues i=1/6 {
         reghdfe `dep_var' `indep_var_`i'' if `condition_`i'', `se_spec' 
             summ `dep_var' if e(sample) == 1 
             estadd scalar mean = r(mean) 
@@ -128,7 +132,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 	#delimit ;
     esttab * using "$output/tables/table_growth_w_lag.tex", append 
         fragment nomtitle nonum
-		posthead("\hspace{2mm} \textit{Panel B: Temprature Lags} & & & &\\[0.5em]")
+		posthead("\hspace{2mm} \textit{Panel B: Temprature Lags} & & & & & &\\[0.5em]")
         scalars(
             "c_sum Sum of Temperature Coefficents"
             "p_value p-value for Temperature Coefficents = 0"
