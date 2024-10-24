@@ -51,7 +51,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	
 	table_header "Dependent Variable is \textbf{Average Hourly}" 5
 	local header prehead(`r(header_macro)')
-	model_titles "\textbf{\shortstack{Quality\\Adjusted\\Output}}" "\textbf{\shortstack{Total Number\\of Entries}}" "\textbf{\shortstack{Active Typing\\Time}}" "\shortstack{\textbf{Mistakes} (per\\ 100 entries)}" "\textbf{\shortstack{Performance\\Earnings}}"
+	model_titles "\textbf{\shortstack{Quality Adjusted\\ Output}}" "\textbf{\shortstack{Total Number\\of Entries}}" "\textbf{\shortstack{Active Typing\\Time}}" "\shortstack{\textbf{Mistakes} (per\\ 100 entries)}" "\textbf{\shortstack{Performance\\Earnings}}"
 	local titles `r(model_title)'
 
 	
