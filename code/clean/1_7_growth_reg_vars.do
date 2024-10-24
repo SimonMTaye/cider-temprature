@@ -57,6 +57,8 @@ use "$data/generated/hi_analysis_daily.dta", clear
     replace two_days = 13 if inrange(day_in_study, 25, 26)
     replace two_days = 14 if inrange(day_in_study, 27, 28)
 
+    gen first_half = day_in_study <= 14
+
     * mean output/temp every two days 
     egen quality_output_two_days = mean(m_quality_output), by(pid two_days)
     egen temp_c_two_days = mean(temperature_c), by(pid two_days)
@@ -75,7 +77,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 save "$data/generated/hi_analysis_daily.dta", replace
 
     * Generate two-day period dta
-    collapse quality_output_two_days temp_c_two_days temp_c_two_days_workday  l* hi* (firstnm) max_absents computer english month year, by(pid two_days)
+    collapse quality_output_two_days temp_c_two_days temp_c_two_days_workday  l* hi* (firstnm) max_absents computer english month year, by(pid two_days first_half)
 
     sort pid two_days
 

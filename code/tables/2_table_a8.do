@@ -12,10 +12,8 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo clear
 	* learning for quality output 
 	gen last_half = 0 
-	replace last_half = 1 if day_in_study>14
+	replace last_half = first_half == 0
 	
-	gen first_half = 0 
-	replace first_half = 1 if day_in_study<=14
 	
 	gen day_in_study_beg = day_in_study*first_half
 	gen day_in_study_end = day_in_study*last_half
@@ -69,8 +67,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
 	table_header "Dependent Variable is Average Quality Adjusted Output (per hour)" 3
 	local header prehead(`r(header_macro)')
-	# There are no model titles for this table
-	# local titles `r(model_title)'
 	#delimit ;
 	esttab * using "$output/tables/table_a8.tex", replace ///
 		$esttab_opts nomtitles ///
