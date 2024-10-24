@@ -28,20 +28,25 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local dep_var growth_quality_output_two_days
     local se_spec absorb(pid two_days month#year) cluster(pid)
 
-    local condition_1 two_days>2 & two_days<8
-    local indep_var_1 temp_c_two_days ld1_temp_c_two_days ld2_temp_c_two_days ld3_temp_c_two_days 
+    local base_condition two_days>2 
+    local indep_vars temp_c_two_days ld1_temp_c_two_days ld2_temp_c_two_days ld3_temp_c_two_days 
+    local indep_vars_lag `indep_vars' l.growth_quality_output_two_days
+    
+
+    local condition_1 `base_condition'
+    local indep_var_1 `indep_vars'
     local dep_var_lag_1 "No"
 
-    local condition_2 `condition_1'
-    local indep_var_2 `indep_var_1' l.growth_quality_output_two_days
+    local condition_2 `base_condition'
+    local indep_var_2 `indep_vars_lag' 
     local dep_var_lag_2 "Yes"
 
-    local condition_3 two_days>2 & two_days<8 & computer==0 
-    local indep_var_3 `indep_var_2'
+    local condition_3 `base_condition' & computer==0 
+    local indep_var_3 `indep_vars_lag'
     local dep_var_lag_3 "Yes"
 
-    local condition_4 two_days>2 & two_days<8 & computer==1 
-    local indep_var_4 `indep_var_2'
+    local condition_4 `base_condition' & computer==1 
+    local indep_var_4 `indep_vars_lag' 
     local dep_var_lag_4 "Yes"
 
     xtset pid two_days
