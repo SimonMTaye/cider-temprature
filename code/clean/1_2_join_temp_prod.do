@@ -18,9 +18,11 @@ use "$data/raw/hourly_productivity.dta", clear
 	
 ****Get rid of lunch time, nap time, survey time... 
 	
+	gen non_work_time = 0
+	label var non_work_time "Captures lunch time, nap time and survey time"
+
 	* lunch time 
-	gen clock_ = clock 
-	drop if clock_>=45000000 & clock<=46800000
+	replace non_work_time = 1 if clock>=45000000 & clock<=46800000
 	
 	* nap time 
 	preserve 
@@ -36,19 +38,21 @@ use "$data/raw/hourly_productivity.dta", clear
 	drop if _merge==2
 	drop _merge 
 
-	// TODO: Annotate
-	drop if clock_>=48600000 & clock<=50100000 & post_lunch_activity!=3 & day_in_study>9 & day_in_study!=28
-	drop if clock_>=51900000 & clock<=57600000 & typing_time==0
-	drop clock_ 
+	// TODO: Annotate reasoning for specific times below
+	replace non_work_time = 1 if clock >=48600000 & clock <=50100000 & post_lunch_activity!=3 & day_in_study>9 & day_in_study!=28
+	replace non_work_time = 1 if clock >=51900000 & clock <=57600000 & typing_time==0
+
+	drop clock
+
+	// Drop non work hours
 	keep if time>=900 
 	keep if time<=2000
+
+	drop if non_work_time == 1
 	
 	collapse (mean) salience fraction_high (firstnm) date day month year day_type (sum) performance_earnings attendance_earnings typing_time correct_entries voluntary_pause mistakes_number, by(pid day_in_study time)
 	
 	rename time time_india
-
-
-
 
 ******** Merge other data
 	* temprature data
@@ -74,27 +78,15 @@ use "$data/raw/hourly_productivity.dta", clear
 	drop if _merge==2 
 	drop _merge
 	
-	// TODO: How to handle missing values?
 	gen round_checkin = round(checkin_time)
 	gen round_checkout = round(checkout_time)
 
 	replace round_checkin = round_checkin * 100
 	replace round_checkout = round_checkout * 100
 	
+	// TODO: How to handle missing values?
 	replace round_checkin = 0 if round_checkin == .
 	replace round_checkout = 0 if round_checkout == .
-
-	
-	/*
-	tostring round_checkin, replace 
-	tostring round_checkout, replace 
-	
-	replace round_checkin = round_checkin +"00"
-	replace round_checkout = round_checkout +"00"
-	
-	destring round_checkin, replace 
-	destring round_checkout, replace 
-	*/
 
 	keep if time_india >= round_checkin & time_india <= round_checkout
 	
