@@ -43,18 +43,18 @@ Author:		Simon Taye
     sysdir set PLUS "$adodir"
     adopath ++ PLUS
 
-// Flags for running cdoe
-//      cleaning_dos generates generated data from raw data
-local cleaning_dos 0
-//      tables runs code to generate all tables
-local tables 1
-//      figures runs code to generate all figures
-local figures 0
-
-// temp macro for running new tables
-local new_tables 0
 //      set custom figure scheme
 set scheme eop
+
+// Flags for running cdoe
+//      cleaning_dos generates generated data from raw data
+local cleaning_dos  1
+//      tables runs code to generate all tables
+local tables        1
+//      figures runs code to generate all figures
+local figures       1
+// temp macro for running new tables
+local new_tables    1
 
 // Raw Data: If first time cloning repository, make sure to extract
 //      raw data from zip
@@ -71,13 +71,13 @@ set scheme eop
 
 *** Runing cleaning do files
     if `cleaning_dos' == 1 {
-        do "$root/code/clean/1_1_temp.do"
-        do "$root/code/clean/1_2_join_temp_prod.do"
-        do "$root/code/clean/1_3_merge_lags_baseline.do"
-        do "$root/code/clean/1_4_merge_pollution.do"
-        do "$root/code/clean/1_5_intermediate_vars.do"
-        do "$root/code/clean/1_6_merge_cog_ab.do"
-        do "$root/code/clean/1_7_growth_reg_vars.do"
+        do "$root/code/clean/1_01_temp.do"
+        do "$root/code/clean/1_02_join_temp_prod.do"
+        do "$root/code/clean/1_03_merge_lags_baseline.do"
+        do "$root/code/clean/1_04_merge_pollution.do"
+        do "$root/code/clean/1_05_intermediate_vars.do"
+        do "$root/code/clean/1_06_merge_cog_ab.do"
+        do "$root/code/clean/1_07_growth_reg_vars.do"
     }
 
 

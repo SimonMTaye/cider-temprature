@@ -42,16 +42,15 @@ use "$data/raw/hourly_productivity.dta", clear
 	replace non_work_time = 1 if clock >=48600000 & clock <=50100000 & post_lunch_activity!=3 & day_in_study>9 & day_in_study!=28
 	replace non_work_time = 1 if clock >=51900000 & clock <=57600000 & typing_time==0
 
-	drop clock
-
 	// Drop non work hours
 	keep if time>=900 
 	keep if time<=2000
 
 	drop if non_work_time == 1
-	
+
+
 	collapse (mean) salience fraction_high (firstnm) date day month year day_type (sum) performance_earnings attendance_earnings typing_time correct_entries voluntary_pause mistakes_number, by(pid day_in_study time)
-	
+
 	rename time time_india
 
 ******** Merge other data
@@ -113,9 +112,19 @@ save "$data/generated/hi_analysis_hourly.dta", replace
 	gen one = 1 
 	egen count_hours = sum(one), by (pid day_in_study)
 
-	collapse (mean) m_mistakes_number heat_index m_total_entries m_correct_entries m_quality_output m_typing_time temperature_c fraction_high count_hours (firstnm) date day month year day_type (sum) quality_output performance_earnings attendance_earnings typing_time correct_entries voluntary_pause mistakes_number total_entries mistakes_per_entries_00, by(pid day_in_study)
+	collapse (mean) m_mistakes_number heat_index m_total_entries ///
+									m_correct_entries m_quality_output m_typing_time temperature_c ///
+									fraction_high count_hours (firstnm) date day month year day_type ///
+									(sum) quality_output performance_earnings attendance_earnings typing_time ///
+									correct_entries voluntary_pause mistakes_number total_entries ///
+									mistakes_per_entries_00 (first) checkout_time=checkout checkin_time=checkin ///
+									, by(pid day_in_study)
 	
-	label var temperature_c "Temprature (Celsius)"
+	
+	gen hrs_of_work = checkout_time - checkin_time
+	label var checkout_time 	"Checkout Time"
+	label var checkin_time 		"Checkin Time"
+	label var hrs_of_work			"Hours at Work"
 
 save "$data/generated/hi_analysis_daily.dta", replace 
 	
