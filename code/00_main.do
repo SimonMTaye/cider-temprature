@@ -123,9 +123,9 @@ local new_tables    1
 
     if `new_tables' == 1 {
         do "$root/code/tables/2_helper.do"
-        do "$root/code/2_growth_two_day_temp_lag.do"
-        do "$root/code/2_growth_two_day_temp_lead.do"
-        do "$root/code/2_productivity_lag.do"
+        do "$root/code/tables/2_growth_two_day_temp_lag.do"
+        do "$root/code/tables/2_growth_two_day_temp_lead.do"
+        do "$root/code/tables/2_productivity_lag.do"
     }
 
 
