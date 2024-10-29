@@ -26,10 +26,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
         local k = `j' - 1
         gen l`i'_temp_c_two_days = (l`j'_temperature_c + l`k'_temperature_c)/2
         gen ld`i'_temp_c_two_days = (ld`j'_temperature_c + ld`k'_temperature_c)/2
-
-        gen l`i'_temp_c_two_days_workday = (l`j'_temp_12 + l`k'_temp_12)/2
-        gen ld`i'_temp_c_two_days_workday = (ld`j'_temp_12 + ld`k'_temp_12)/2
-
     }
 
     /* Computer related code 
@@ -63,8 +59,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
     egen quality_output_two_days = mean(m_quality_output), by(pid two_days)
     egen temp_c_two_days = mean(temperature_c), by(pid two_days)
 
-    * generate workday var used by table a10
-    egen temp_c_two_days_workday = mean(temp_12_workday), by(pid two_days)
 
     label var l1_temperature_c "Lag 1 of Temperature"
     label var l2_temperature_c "Lag 2 of Temperature"
@@ -77,7 +71,12 @@ use "$data/generated/hi_analysis_daily.dta", clear
 save "$data/generated/hi_analysis_daily.dta", replace
 
     * Generate two-day period dta
-    collapse quality_output_two_days temp_c_two_days temp_c_two_days_workday  l* hi* (firstnm) max_absents computer english month year, by(pid two_days first_half)
+    collapse first_half quality_output_two_days temp_c_two_days l* (firstnm) max_absents computer english month year, by(pid two_days)
+
+    drop if two_days == .
+
+    gen learning_half = two_days < 9
+    label var learning_half "Dummy indicating whether we are in period where learning happens or not"
 
     sort pid two_days
 
@@ -85,7 +84,7 @@ save "$data/generated/hi_analysis_daily.dta", replace
     replace diff_quality_output_two_days = quality_output_two_days - quality_output_two_days[_n-2] if diff_quality_output_two_days == .
      
     replace diff_quality_output_two_days=. if two_days==1
-    gen growth_quality_output_two_days = diff_quality_output_two_days/quality_output_two_days[_n-1]
+    gen growth_quality_output_two_days = diff_quality_output_two_days/ quality_output_two_days[_n-1]
     
     label var growth_quality_output_two_days "Productivity growth"
     label var temp_c_two_days "Temperature ($^{\circ}C$)"

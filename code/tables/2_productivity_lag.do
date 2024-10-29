@@ -76,22 +76,19 @@ use "$data/generated/hi_analysis_daily.dta", clear
         eststo model_`i'
     }
 
+    table_header "Dependent Variable: \textbf{Productivity}" 8
+	local header prehead(`r(header_macro)')
+    model_titles "N = 0 Lags" "N = 1 Lag" "N = 2 Lags" "N = 3 Lags", pattern(1 0 1 0 1 0 1 0) und
+    local title `r(model_title)'
+
     #delimit ;
     esttab * using "$output/tables/table_productivity.tex", replace 
-		prehead("{\begin{tabular}{l*{8}{c}} \toprule & \multicolumn{8}{c}{Dependent Variable: \textbf{Productivity}} \\[0.5em]")
+        `header' `title'
         scalars( 
             "dep_var_lag Control for Lag of Dependent Variable" 
             "mean Dependent Variable Mean"
             "num_obs Observations" 
             "r2 R-squared") 
-        mgroups(
-            "N = 0 Lags" 
-            "N = 1 Lag" 
-            "N = 2 Lags" 
-            "N = 3 Lags",
-            pattern(1 0 1 0 1 0 1 0)
-            prefix(\multicolumn{@span}{c}{) suffix(})
-            span erepeat(\cmidrule(lr){@span})) 
         $esttab_opts keep(`indep_var_7');
     #delimit cr;
 
