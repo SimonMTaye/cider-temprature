@@ -49,15 +49,16 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	gen high	= temp_q == 4
 	gen medium	= temp_q == 3
 	gen low		= temp_q == 2
-	gen high_temp	= high*temperature_c
-	gen medium_temp = medium*temperature_c
-	gen lower_temp	= low*temperature_c
+
+	//gen high_temp	= high*temperature_c
+	//gen medium_temp = medium*temperature_c
+	//gen lower_temp	= low*temperature_c
 
 	
 	label var l1_temperature_c "Lag 1 of Temperature"
-	label var high_temp "High Temperature (=1)"
-	label var medium_temp "Medium Temperature (=1)"
-	label var lower_temp "Low Temperature (=1)"
+	label var high "High Temperature (=1)"
+	label var medium "Medium Temperature (=1)"
+	label var low "Low Temperature (=1)"
 	
 	
 	// new absenteeism + checkin checkout for appendix / extra checks 
@@ -70,7 +71,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 	
-	reghdfe at_present_check high_temp medium_temp lower_temp, absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe at_present_check high medium low, absorb(pid day_in_study month#year) cluster(pid)
 		summ at_present_check if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
@@ -87,7 +88,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 	
-	reghdfe checkin_time high_temp medium_temp lower_temp if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe checkin_time high medium low if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
 		summ checkin_time if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
@@ -104,7 +105,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 	
-	reghdfe checkout_time high_temp medium_temp lower_temp if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe checkout_time high medium low if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
 		summ checkout_time if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
@@ -121,7 +122,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 	
-	reghdfe hrs_of_work high_temp medium_temp lower_temp, absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe hrs_of_work high medium low, absorb(pid day_in_study month#year) cluster(pid)
 		summ hrs_of_work if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
