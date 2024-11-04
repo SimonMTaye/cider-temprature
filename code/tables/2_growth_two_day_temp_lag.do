@@ -101,7 +101,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         table_header  "Dependent Variable: \textbf{Productivity Growth}" 6
         local header prehead(`r(header_macro)')
 
-        model_titles "\shortstack{First Half\\ of Study}" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", pattern(1 0 1 0 1 0) und
+        model_titles "\shortstack{Full\\ Sample}" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", pattern(1 0 1 0 1 0) und
         local title `r(model_title)'
         // Cutting r2 from the table since it not consistent within the two panels
         #delimit ;

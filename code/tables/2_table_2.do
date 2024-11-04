@@ -15,17 +15,16 @@ Modified By:	Simon Taye
 use "$data/generated/hi_analysis_daily.dta", clear 
 
 	eststo clear
+ 	clear results
 
 	// TODO Broken output
 
 	* controlling for lags of depvar 
 	xtset pid day_in_study
 
-	
 	* replacing missings with previous lags
 	gen lag_output = l.m_quality_output
-	gen second_lag_output = l2.m_quality_output
-	replace lag_output = second_lag_output if lag_output==.
+	replace lag_output = l2.m_quality_output if lag_output==.
 	
 	reghdfe m_quality_output temperature_c lag_output, absorb(pid day_in_study month#year) cluster(pid)
 		summ m_quality_output if e(sample) == 1 
