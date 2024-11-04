@@ -56,19 +56,6 @@ local figures       1
 // temp macro for running new tables
 local new_tables    1
 
-// Raw Data: If first time cloning repository, make sure to extract
-//      raw data from zip
-    if !fileexists("$data/raw") {
-        if fileexists("$data/raw.zip") {
-            cd "$data"
-            unzipfile "$data/raw.zip",  replace 
-            cd "$root/code"
-        } 
-        else {
-            display "Raw data missing"
-        }
-    }
-
 *** Runing cleaning do files
     if `cleaning_dos' == 1 {
         do "$root/code/clean/1_01_temp.do"
