@@ -9,9 +9,10 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-eststo clear
 use "$data/generated/hi_analysis_daily.dta", clear 
 
+ 	clear results
+	eststo clear
 	reghdfe quality_output temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		summ quality_output if e(sample) == 1 
 		estadd scalar num_obs = e(N)
@@ -27,8 +28,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 	
 
-
-	
 	reghdfe typing_time temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		summ typing_time if e(sample) == 1 
 		estadd scalar num_obs = e(N)
@@ -45,7 +44,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar sd = r(sd)
 	eststo
 	
-	reghdfe performance_earnings temperature_c, absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe performance_earnings_hr temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		summ performance_earnings if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
