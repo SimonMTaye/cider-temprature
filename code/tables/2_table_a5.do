@@ -9,24 +9,24 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-use "$data/generated/hi_analysis_daily.dta", clear 
+use "$data/generated/absenteeism_time_temp.dta", clear 
 
 	eststo clear
-	reghdfe at_present_check temperature_c, absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe at_present_check workday_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		sum at_present_check if e(sample)==1
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
 		estadd scalar sd = r(sd)
 	eststo
 	
-	reghdfe checkin_time temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe checkin_time workday_temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
 		sum checkin_time if e(sample)==1
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
 		estadd scalar sd = r(sd)
 	eststo
 	
-	reghdfe checkout_time temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe checkout_time workday_temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
 		sum checkout_time if e(sample)==1
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
@@ -34,7 +34,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 
 	
-	reghdfe hrs_of_work temperature_c, absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe hrs_of_work workday_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		sum hrs_of_work if e(sample)==1
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 

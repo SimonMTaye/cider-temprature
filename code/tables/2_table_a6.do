@@ -25,34 +25,42 @@ Changes:
 ****************************************************************/
 * absenteeism, checkin / checkout time 
 	
-use "$data/generated/hi_analysis_daily.dta", clear 
+use "$data/generated/absenteeism_time_temp.dta", clear 
 
+/* 
+For replication purposes
+use "$data/raw/hours_of_work.dta", clear 
+		keep pid day_in_study day month year at_present_check checkin_time checkout_time hrs_of_work
+ 	preserve
+
+	use "$data/generated/hi_hourly_temp_NOAA_indiatime.dta", clear 
+	
+		keep if time_india>900 & time_india<1900
+		collapse (mean) workday_temperature_c=temperature_c, by (day year month)
+		
+		egen date = group(year month day)
+		sort date
+		gen l1_temperature_c = workday_temperature_c[_n - 1]
+			
+		tempfile temp
+		save `temp'
+	
+	restore 
+	
+	
+	merge m:1 day month year using "`temp'"
+	drop if _merge==2
+	drop _merge 
+	*/
 
 	eststo clear
+	xtset pid day_in_study
 	
-	/*
-	// Code from archive/absenteeism.do
-	// Adapated using quartile code from Figure A2 to avoid harcoded values
-	gen high = 0 
-	replace high=1 if inrange(tempc, 30.01, 35)
-	gen medium = 0 
-	replace medium=1 if inrange(tempc, 28.01, 30) 
-	gen low = 0 
-	replace low = 1 if inrange(tempc, 26.01, 28)
-			
-	gen high_temp = high*tempc
-	gen medium_temp = medium*tempc 
-	gen low_temp = low*tempc
-	*/
 		
-	xtile temp_q	= temperature_c, nq(4)
-	gen high	= temp_q == 4
-	gen medium	= temp_q == 3
-	gen low		= temp_q == 2
-
-	//gen high_temp	= high*temperature_c
-	//gen medium_temp = medium*temperature_c
-	//gen lower_temp	= low*temperature_c
+	xtile temp_q	= workday_temperature_c, nq(4)
+	gen high			= temp_q == 4
+	gen medium		= temp_q == 3
+	gen low				= temp_q == 2
 
 	
 	label var l1_temperature_c "Lag 1 of Temperature"
@@ -63,7 +71,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	
 	// new absenteeism + checkin checkout for appendix / extra checks 
 	
-	reghdfe at_present_check temperature_c l1_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe at_present_check workday_temperature_c l1_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		summ at_present_check if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
@@ -80,7 +88,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
 	
 	
-	reghdfe checkin_time temperature_c l1_temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe checkin_time workday_temperature_c l1_temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
 		summ checkin_time if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
@@ -97,7 +105,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
 	
 	
-	reghdfe checkout_time temperature_c l1_temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe checkout_time workday_temperature_c l1_temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
 		summ checkout_time if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
@@ -114,7 +122,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
 	
 	
-	reghdfe hrs_of_work temperature_c l1_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe hrs_of_work workday_temperature_c l1_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
 		summ hrs_of_work if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 

@@ -46,10 +46,34 @@ use "$data/raw/baseline_cleaned.dta", clear
 	label var total_edu_yrs "Years of Education"
 	label var threetimesnine "Math Ability (=1)"
 
-	estpost ttest english computer total_edu_yrs threetimesnine, by(two_seasons)
-	esttab . using "$output/tables/table_a11.tex", replace  nonum noobs ///
-		cells("mu_1 mu_2 p" "sd_1 sd_2 .") label ///
-		collabels("\textbf{April-September}" "\textbf{October-March}" "\textbf{p-value 1 = 2}")
+	foreach var of varlist english computer total_edu_yrs threetimesnine {
+    * Perform the t-test and store the results
+    estpost ttest `var', by(two_seasons)
+    
+    * Calculate standard deviation for group 1 (two_seasons == 0)
+    quietly summarize `var' if two_seasons == 0, meanonly
+    local sd_1 = r(sd)
+    * Calculate standard deviation for group 2 (two_seasons == 1)
+    quietly summarize `var' if two_seasons == 1, meanonly
+    local sd_2 = r(sd)
+    
+    * Add the standard deviations to the estimation results
+    estadd scalar sd_1 = `sd_1'
+    estadd scalar sd_2 = `sd_2'
+    
+    * Store the estimation results for each variable
+    eststo `var'
+	}
+
+	table_header "" 3
+	local header prehead(`r(header_macro)')
+	model_titles "\textbf{April-September}" "\textbf{October-March}" "\textbf{p-value 1 = 2}"
+	local titles `r(model_title)'
+
+	* Output the table with variables in rows and statistics in columns using estout
+	esttab english computer total_edu_yrs threetimesnine using "$output/tables/table_a11.tex", replace ///
+    cells("mu_1(fmt(%5.3f)) mu_2(fmt(%5.3f)) p(fmt(%5.3f))" "sd_1(fmt(%5.3f)) sd_2(fmt(%5.3f)) .") ///
+    label `header' `titles'
 
 
 		*cells("mu_1(label(April-September)) mu_2(label(October-March)) p(label(p-value 1 = 2))" ///
