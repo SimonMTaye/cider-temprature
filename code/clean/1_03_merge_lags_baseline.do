@@ -47,15 +47,17 @@ use "$data/generated/hi_hourly_temp_NOAA_indiatime.dta", clear
 		gen ld9_`var' = `var'[_n + 9]
 		gen ld10_`var' = `var'[_n + 10]
 
-	tempfile lags
-save `lags'
+		rename temperature_c workday_temperature_c
+    label var workday_temperature_c "Temperature ($^{\circ}C$)"
+
+save "$data/generated/temperatue_lags.dta", replace
 
 
 use "$data/generated/hi_analysis_daily.dta", clear
 
 	****** Merge lagged temperatue data with productivity data
 
-		merge m:1 day month year using "`lags'"
+		merge m:1 day month year using "$data/generated/temperatue_lags.dta"
 		drop if _merge==2
 		drop _merge
 		* merge baseline data

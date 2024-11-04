@@ -78,6 +78,7 @@ local new_tables    1
         do "$root/code/clean/1_05_intermediate_vars.do"
         do "$root/code/clean/1_06_merge_cog_ab.do"
         do "$root/code/clean/1_07_growth_reg_vars.do"
+        do "$root/code/clean/1_08_absenteeism.do"
     }
 
 
@@ -98,12 +99,12 @@ local new_tables    1
         do "$root/code/tables/2_helper.do"
         do "$root/code/tables/2_table_1.do"
         // INFO: Orginially named 'learning.do'
-        *do "$root/code/tables/2_table_2.do"
+        do "$root/code/tables/2_table_2.do"
         do "$root/code/tables/2_table_3.do"
         // INFO: Orignially part of productivity.do
         do "$root/code/tables/2_table_a1.do"
         do "$root/code/tables/2_table_a2.do"
-        *do "$root/code/tables/2_table_a3.do"
+        do "$root/code/tables/2_table_a3.do"
         do "$root/code/tables/2_table_a4.do"
         // INFO: Orginially part of learning with temp bins.do
         do "$root/code/tables/2_table_a5.do"
