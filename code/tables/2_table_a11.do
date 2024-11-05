@@ -33,17 +33,13 @@ use "$data/raw/baseline_cleaned.dta", clear
 
 	gen month = month(date)
 	* Season code adapated from "balance.do"
-	gen winter = 1 if inrange(month, 1, 3)
-	replace winter = 0 if winter==. 
+	gen winter = inrange(month, 1, 3)
 	
-	gen summer = 1 if inrange(month, 4, 6)
-	replace summer = 0 if summer==. 
+	gen summer = inrange(month, 4, 6)
 	
-	gen monsoon = 1 if inrange(month, 6, 9)
-	replace monsoon = 0 if monsoon==. 
+	gen monsoon = inrange(month, 6, 9)
 	
-	gen post_monsoon = 1 if inrange(month, 10, 12)
-	replace post_monsoon = 0 if post_monsoon==. 
+	gen post_monsoon = inrange(month, 10, 12)
 	
 	gen two_seasons = 1 if winter==1 | post_monsoon==1
 	replace two_seasons = 0 if two_seasons==.

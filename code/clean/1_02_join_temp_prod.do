@@ -49,7 +49,10 @@ use "$data/raw/hourly_productivity.dta", clear
 	drop if non_work_time == 1
 
 
-	collapse (mean) salience fraction_high (firstnm) date day month year day_type (sum) performance_earnings attendance_earnings typing_time correct_entries voluntary_pause mistakes_number, by(pid day_in_study time)
+	collapse 	(mean) salience fraction_high  ///
+						(firstnm) date day month year day_type   ///
+						(first) checkout_time=checkout checkin_time=checkin ///
+						(sum) performance_earnings attendance_earnings typing_time correct_entries voluntary_pause mistakes_number, by(pid day_in_study time)
 
 	rename time time_india
 
@@ -72,11 +75,11 @@ use "$data/raw/hourly_productivity.dta", clear
 	xtset pid_day time
 	
 	
-	* checkin / checkout data
+	/* checkin / checkout data
 	merge m:1 pid day_in_study using "$data/raw/checkin_checkout.dta"
 	drop if _merge==2 
 	drop _merge
-	
+	*/
 	gen round_checkin = round(checkin_time)
 	gen round_checkout = round(checkout_time)
 
@@ -117,7 +120,7 @@ save "$data/generated/hi_analysis_hourly.dta", replace
 									fraction_high count_hours (firstnm) date day month year day_type ///
 									(sum) quality_output performance_earnings attendance_earnings typing_time ///
 									correct_entries voluntary_pause mistakes_number total_entries ///
-									mistakes_per_entries_00 (first) checkout_time=checkout checkin_time=checkin ///
+									mistakes_per_entries_00 (first) checkout_time checkin_time ///
 									, by(pid day_in_study)
 	
 	

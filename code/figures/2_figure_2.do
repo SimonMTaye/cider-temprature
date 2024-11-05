@@ -16,10 +16,10 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	preserve
 		collapse m_quality_output_rel, by(day_in_study temp_quartile)
 		*half period, top/bottom
-		twoway (scatter m_quality_output_rel day_in_study if temp_quartile==1 & day<15, color(navy))  ///
-		(fpfit m_quality_output_rel day_in_study if temp_quartile==1 & day<15, estopts(deg(1)) lwidth(medium) color(navy))  ///
-		(scatter m_quality_output_rel day_in_study if temp_quartile==4 & day<15, color(eltblue) ytitle(Output Relative to First Day) xscale(r(1(1)15)) xlabel(2(2)15))  ///
-		(fpfit m_quality_output_rel day_in_study if temp_quartile==4 & day<15, estopts(deg(1)) color(eltblue)),  ///
+		twoway (scatter m_quality_output_rel day_in_study if temp_quartile==1 & day_in_study<15, color(navy))  ///
+		(fpfit m_quality_output_rel day_in_study if temp_quartile==1 & day_in_study<15, estopts(deg(1)) lwidth(medium) color(navy))  ///
+		(scatter m_quality_output_rel day_in_study if temp_quartile==4 & day_in_study<15, color(eltblue) ytitle(Output Relative to First Day) xscale(r(1(1)15)) xlabel(2(2)15))  ///
+		(fpfit m_quality_output_rel day_in_study if temp_quartile==4 & day_in_study<15, estopts(deg(1)) color(eltblue)),  ///
 		legend(label(1 "Low Temperature") label(2) label(3 "High Temperature") label(4) order(1 3) rows(1)) ytitle(Output Relative to First Day) xscale(r(1(1)15)) xlabel(2(2)15)
 		graph export "$output/figures/figure_2_a.pdf", replace
 	restore
@@ -34,10 +34,10 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	preserve
 		collapse m_quality_output_rel, by(day_in_study tempave_pid_quartile)
 		*half period, top/bottom
-		twoway	(scatter m_quality_output_rel day_in_study if tempave_pid_quartile==1 & day<15, color(navy))  ///
-			(fpfit m_quality_output_rel day_in_study if tempave_pid_quartile==1 & day<15, estopts(deg(1)) lwidth(medium) color(navy))  ///
-			(scatter m_quality_output_rel day_in_study if tempave_pid_quartile==4 & day<15, color(eltblue) ytitle(Output Relative to First Day) xscale(r(1(1)15)) xlabel(2(2)15))  ///
-			(fpfit m_quality_output_rel day_in_study if tempave_pid_quartile==4 & day<15, estopts(deg(1)) color(eltblue)),  ///
+		twoway	(scatter m_quality_output_rel day_in_study if tempave_pid_quartile==1 & day_in_study<15, color(navy))  ///
+			(fpfit m_quality_output_rel day_in_study if tempave_pid_quartile==1 & day_in_study<15, estopts(deg(1)) lwidth(medium) color(navy))  ///
+			(scatter m_quality_output_rel day_in_study if tempave_pid_quartile==4 & day_in_study<15, color(eltblue) ytitle(Output Relative to First Day) xscale(r(1(1)15)) xlabel(2(2)15))  ///
+			(fpfit m_quality_output_rel day_in_study if tempave_pid_quartile==4 & day_in_study<15, estopts(deg(1)) color(eltblue)),  ///
 			legend(label(1 "Low Temperature") label(2) label(3 "High Temperature") label(4) order(1 3) rows(1)) ytitle(Output Relative to First Day) xscale(r(1(1)15)) xlabel(2(2)15)
 			graph export "$output/figures/figure_2_b.pdf", replace
 
