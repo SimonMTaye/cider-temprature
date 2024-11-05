@@ -40,9 +40,9 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar mean = r(mean) 
 		estadd scalar num_obs = e(N)
 		* Store number of observations
-		estadd scalar coeff_sum =  _b[l3_temp] 
+		estadd scalar coeff_sum =  _b[l3_temperature_c] 
 		* Perform the test and store the p-value
-		test  _b[l3_temp] = 0 
+		test  _b[l3_temperature_c] = 0 
 		estadd scalar p_value = r(p)
 	eststo
 
@@ -53,9 +53,9 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		* Store number of observations
 		estadd scalar num_obs = e(N)
 		* Calculate the sum of the coefficients
-		estadd scalar coeff_sum =  _b[l3_temp] + _b[l4_temp] 
+		estadd scalar coeff_sum =  _b[l3_temperature_c] + _b[l4_temperature_c] 
 		* Perform the test and store the p-value
-		test  _b[l3_temp] + _b[l4_temp] = 0 
+		test  _b[l3_temperature_c] + _b[l4_temperature_c] = 0 
 		estadd scalar p_value = r(p)
 	eststo
 	
@@ -65,9 +65,9 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		* Store number of observations
 		estadd scalar num_obs = e(N)
 		* Calculate the sum of the coefficients
-		estadd scalar coeff_sum =  _b[l3_temp] + _b[l4_temp] + _b[l5_temp]
+		estadd scalar coeff_sum =  _b[l3_temperature_c] + _b[l4_temperature_c] + _b[l5_temperature_c]
 		* Perform the test and store the p-value
-		test  _b[l3_temp] + _b[l4_temp] + _b[l5_temp] = 0 
+		test  _b[l3_temperature_c] + _b[l4_temperature_c] + _b[l5_temperature_c] = 0 
 		estadd scalar p_value = r(p)
 	eststo
 
