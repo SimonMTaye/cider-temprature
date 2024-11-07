@@ -89,6 +89,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
             "mean Dependent Variable Mean"
             "num_obs Observations" 
             "r2 R-squared") 
-        $esttab_opts keep(`indep_var_7');
+        $esttab_opts keep(temperature_c);
     #delimit cr;
 

@@ -50,7 +50,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         local dep_var_lag_4 "Yes"
 
         // Macros for storing custom row to display coefficient sum
-        local sum_row "[1em] Sum of Temperature Coefficents&"
+        local sum_row "Sum of Temperature Coefficents&"
         local pval_row ""
 
         forvalues i=1/4 {
@@ -78,7 +78,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 local pval_row "`pval_row' & [`p_value_`i'']"
         }
 
-        local custom_row "`sum_row' \\ `pval_row' \\"
+        local custom_row "`sum_row' \\ `pval_row' \\ [0.5em] \hline"
 
         * Output table
         table_header  "Dependent Variable: \textbf{Productivity Growth}" 4
@@ -94,12 +94,13 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 "dep_var_lag Control for Lag of Dependent Variable" 
                 "mean Dependent Variable Mean"
                 "num_obs Observations" 
+                "r2 R-squared"
             ) 
             $esttab_opts keep(`indep_var_1');
         #delimit cr;
 
 
 
-        insert_line `filename' 7 "`custom_row'"
+        insert_line `filename' 5 "`custom_row'"
 
     //nl (m_quality_output  = {b0} + {b1}*two_days + {b2}*max(0, day_in_study - {b3})), initial(b3 25) iterate(1000000)

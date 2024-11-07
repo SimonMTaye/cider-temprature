@@ -60,7 +60,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
     xtset pid two_days
     // Macros for storing custom row to display coefficient sum
-    local sum_row "[1em] Sum of Lead Temperature Coefficents&"
+    local sum_row "Sum of Lead Temperature Coefficents&"
     local pval_row ""
 
     forvalues i=1/4 {
@@ -92,8 +92,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
     }
 
-
-    local custom_row "`sum_row' \\ `pval_row' \\"
+    local custom_row "`sum_row' \\ `pval_row' \\ [0.5em] \hline"
 
 	table_header "Dependent Variable: \textbf{Productivity Growth}" 4
 	local header prehead(`r(header_macro)')
@@ -106,11 +105,12 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         scalars(
             "dep_var_lag Control for Lag of Dependent Variable" 
             "mean Dependent Variable Mean"
-            "num_obs Observations" "r2 R-squared"
+            "num_obs Observations" 
+            "r2 R-squared"
         ) 
         $esttab_opts keep(`indep_var_1');
         
 	#delimit cr;
 
-    insert_line `filename' 7 "`custom_row'"
+    insert_line `filename' 5 "`custom_row'"
     }

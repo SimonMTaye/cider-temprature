@@ -23,6 +23,9 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local base_condition_2 two_days>2 
     local name_2 "$output/tables/table_growth_full_study.tex"
 
+    local first_column_1 "\shortstack{First Half\\ of Study}"
+    local first_column_2 "Full Sample"
+
     forvalues j=1/2 {
         ereturn clear
         eststo clear
@@ -67,7 +70,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         local dep_var_lag_6 "Yes"
 
         // Macros for storing custom row to display coefficient sum
-        local sum_row "[1em] Sum of Temperature Coefficents&"
+        local sum_row " Sum of Temperature Coefficents&"
         local pval_row ""
 
         forvalues i=1/6 {
@@ -95,13 +98,13 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 local pval_row "`pval_row' & [`p_value_`i'']"
         }
 
-        local custom_row "`sum_row' \\ `pval_row' \\"
+        local custom_row "`sum_row' \\ `pval_row' \\ [0.5em] \hline"
 
         * Output table
         table_header  "Dependent Variable: \textbf{Productivity Growth}" 6
         local header prehead(`r(header_macro)')
 
-        model_titles "\shortstack{Full\\ Sample}" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", pattern(1 0 1 0 1 0) und
+        model_titles  "`first_column_`j''" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", pattern(1 0 1 0 1 0) und
         local title `r(model_title)'
         // Cutting r2 from the table since it not consistent within the two panels
         #delimit ;
@@ -111,6 +114,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 "dep_var_lag Control for Lag of Dependent Variable" 
                 "mean Dependent Variable Mean"
                 "num_obs Observations" 
+                "r2 R-squared"
             ) 
             $esttab_opts keep(`indep_var_1');
         #delimit cr;
@@ -118,7 +122,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
 
         // Insert manually constructed Sum of coefficent row at line 7 of the table
-        insert_line `filename' 7 "`custom_row'"
+        insert_line `filename' 5 "`custom_row'"
 
     }
     //nl (m_quality_output  = {b0} + {b1}*two_days + {b2}*max(0, day_in_study - {b3})), initial(b3 25) iterate(1000000)
