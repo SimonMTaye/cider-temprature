@@ -27,19 +27,20 @@ use "$data/generated/hi_analysis_daily.dta", clear
     local dep_var m_quality_output
     local se_spec absorb(pid day_in_study month#year) cluster(pid)
 
-    local indep_var_1 temperature_c
+
+    local indep_var_1 workday_temperature_c
     local p_test_1    ""
     local dep_var_lag_1 "No"
 
-    local indep_var_3 temperature_c l1_temperature_c
+    local indep_var_3 workday_temperature_c l1_temperature_c
     local p_test_3    "_b[l1_temperature_c]"
     local dep_var_lag_3 "No"
 
-    local indep_var_5 temperature_c l1_temperature_c l2_temperature_c
+    local indep_var_5 workday_temperature_c l1_temperature_c l2_temperature_c
     local p_test_5    "_b[l1_temperature_c] + _b[l2_temperature_c]"
     local dep_var_lag_5 "No"
 
-    local indep_var_7 temperature_c l1_temperature_c l2_temperature_c l3_temperature_c
+    local indep_var_7 workday_temperature_c l1_temperature_c l2_temperature_c l3_temperature_c
     local p_test_7    "_b[l1_temperature_c] + _b[l2_temperature_c] + _b[l3_temperature_c]"
     local dep_var_lag_7 "No"
 
@@ -89,6 +90,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
             "mean Dependent Variable Mean"
             "num_obs Observations" 
             "r2 R-squared") 
-        $esttab_opts keep(temperature_c);
+        $esttab_opts keep(`indep_var_7');
     #delimit cr;
 

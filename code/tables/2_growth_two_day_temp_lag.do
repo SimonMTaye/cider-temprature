@@ -35,7 +35,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         local dep_var growth_quality_output_two_days
         local se_spec absorb(pid two_days month#year) cluster(pid)
 
-        local indep_vars temp_c_two_days l1_temp_c_two_days l2_temp_c_two_days l3_temp_c_two_days 
+        local indep_vars temp_c_two_days_workday l1_temp_c_two_days l2_temp_c_two_days l3_temp_c_two_days 
         local indep_vars_lag `indep_vars' l.growth_quality_output_two_days
         local base_condition `base_condition_`j''
 
@@ -83,7 +83,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 estadd local dep_var_lag = "`dep_var_lag_`i''"
                 * Store sum of temp coeffcients and p-value 
             eststo model_`i'
-                local coeff_sum _b[temp_c_two_days] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days]
+                local coeff_sum _b[temp_c_two_days_workday] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days]
                 test  `coeff_sum' = 0 
                 local p_value_`i' = r(p) 
                 local c_sum_`i' = `coeff_sum'

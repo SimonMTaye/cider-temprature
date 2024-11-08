@@ -38,7 +38,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local se_spec absorb(pid two_days month#year) cluster(pid)
 
     local base_condition `base_condition_`j''
-    local indep_vars temp_c_two_days ld1_temp_c_two_days ld2_temp_c_two_days ld3_temp_c_two_days 
+    local indep_vars temp_c_two_days_workday ld1_temp_c_two_days ld2_temp_c_two_days ld3_temp_c_two_days 
     local indep_vars_lag `indep_vars' l.growth_quality_output_two_days
     
 
@@ -60,8 +60,11 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
     xtset pid two_days
     // Macros for storing custom row to display coefficient sum
-    local sum_row "Sum of Lead Temperature Coefficents&"
-    local pval_row ""
+    local sum_row_lead "Sum of Lead Temperature Coefficents&"
+    local pval_row_lead ""
+
+    local sum_row_all "Sum of Temperature Coefficents&"
+    local pval_row_all ""
 
     forvalues i=1/4 {
 
@@ -73,26 +76,39 @@ use "$data/generated/hi_analysis_twoday.dta", clear
             * Store 
             estadd local dep_var_lag = "`dep_var_lag_`i''"
             * Check
-            local coeff_sum _b[ld1_temp_c_two_days] + _b[ld2_temp_c_two_days] + _b[ld3_temp_c_two_days] 
-            estadd scalar c_sum = `coeff_sum'
-            test `coeff_sum' = 0 
-            estadd scalar p_value = r(p)
         eststo model_`i'
-            local p_value_`i' = r(p) 
-            local c_sum_`i' = `coeff_sum'
-            // Construct custom row for displaying coeff_sum and p-value
-            // Add stars to coefficent
-            add_stars `c_sum_`i'' `p_value_`i''
-            local c_sum_star_`i' `r(coeff_with_star)'
-            local p_value_`i' = string(`p_value_`i'', "%5.3f")
-            // Append coefficent sum row
-            local sum_row "`sum_row' `c_sum_star_`i'' &"
-            // Append to p-value row
-            local pval_row "`pval_row' & [`p_value_`i'']"
+            // Make sum of lead coefficients row
+                local coeff_sum_lead _b[ld1_temp_c_two_days] + _b[ld2_temp_c_two_days] + _b[ld3_temp_c_two_days] 
+                test `coeff_sum_lead' = 0 
+                local p_value_lead_`i' = r(p) 
+                local c_sum_lead_`i' = `coeff_sum_lead'
+                // Add stars to coefficent
+                add_stars `c_sum_lead_`i'' `p_value_lead_`i''
+                local c_sum_lead_star_`i' `r(coeff_with_star)'
+                local p_value_lead_`i' = string(`p_value_lead_`i'', "%5.3f")
+                // Append coefficent sum row
+                local sum_row_lead "`sum_row_lead' `c_sum_lead_star_`i'' &"
+                // Append to p-value row
+                local pval_row_lead "`pval_row_lead' & [`p_value_lead_`i'']"
+            // Make sum of all temp coefficients row
+                local coeff_sum_all _b[temp_c_two_days_workday] + _b[ld1_temp_c_two_days] + _b[ld2_temp_c_two_days] + _b[ld3_temp_c_two_days] 
+                test `coeff_sum_all' = 0 
+                local p_value_all_`i' = r(p) 
+                local c_sum_all_`i' = `coeff_sum_all'
+                // Add stars to coefficent
+                add_stars `c_sum_all_`i'' `p_value_all_`i''
+                local c_sum_all_star_`i' `r(coeff_with_star)'
+                local p_value_all_`i' = string(`p_value_all_`i'', "%5.3f")
+                // Append coefficent sum row
+                local sum_row_all "`sum_row_all' `c_sum_all_star_`i'' &"
+                // Append to p-value row
+                local pval_row_all "`pval_row_all' & [`p_value_all_`i'']"
+
 
     }
 
-    local custom_row "`sum_row' \\ `pval_row' \\ [0.5em] \hline"
+    local all_row "`sum_row_all' \\ `pval_row_all' \\ [0.5em]"
+    local lead_row "`sum_row_lead' \\ `pval_row_lead' \\ [0.5em]"
 
 	table_header "Dependent Variable: \textbf{Productivity Growth}" 4
 	local header prehead(`r(header_macro)')
@@ -108,9 +124,10 @@ use "$data/generated/hi_analysis_twoday.dta", clear
             "num_obs Observations" 
             "r2 R-squared"
         ) 
-        $esttab_opts keep(`indep_var_1');
+        $esttab_opts keep(temp_c_two_days_workday);
         
 	#delimit cr;
 
-    insert_line `filename' 5 "`custom_row'"
+    insert_line `filename' 5 "`all_row'"
+    insert_line `filename' 6 "`lead_row'"
     }

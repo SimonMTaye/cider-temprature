@@ -58,6 +58,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
     * mean output/temp every two days 
     egen quality_output_two_days = mean(m_quality_output), by(pid two_days)
     egen temp_c_two_days = mean(temperature_c), by(pid two_days)
+    egen temp_c_two_days_workday = mean(workday_temperature_c), by(pid two_days)
 
 
     label var l1_temperature_c "Lag 1 of Temperature"
@@ -71,7 +72,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 save "$data/generated/hi_analysis_daily.dta", replace
 
     * Generate two-day period dta
-    collapse first_half quality_output_two_days temp_c_two_days l* (firstnm) max_absents computer english month year, by(pid two_days)
+    collapse first_half quality_output_two_days temp_c_two_days temp_c_two_days_workday  l* (firstnm) max_absents computer english month year, by(pid two_days)
 
     drop if two_days == .
 
@@ -87,7 +88,8 @@ save "$data/generated/hi_analysis_daily.dta", replace
     gen growth_quality_output_two_days = diff_quality_output_two_days/ quality_output_two_days[_n-1]
     
     label var growth_quality_output_two_days "Productivity growth"
-    label var temp_c_two_days "Temperature ($^{\circ}C$)"
+    label var temp_c_two_days         "Temperature ($^{\circ}C$)"
+    label var temp_c_two_days_workday "Temperature ($^{\circ}C$)"
 
     label var l1_temp_c_two_days "Lag 1 of Temperature"
     label var l2_temp_c_two_days "Lag 2 of Temperature"
