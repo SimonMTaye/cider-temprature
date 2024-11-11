@@ -28,29 +28,34 @@ use "$data/generated/hi_analysis_daily.dta", clear
     local se_spec absorb(pid day_in_study month#year) cluster(pid)
 
 
-    local indep_var_1 workday_temperature_c
+    local temp_var temperature_c
+    local indep_var_1 `temp_var'
     local p_test_1    ""
     local dep_var_lag_1 "No"
 
-    local indep_var_3 workday_temperature_c l1_temperature_c
+    local indep_var_3 `temp_var' l1_temperature_c
     local p_test_3    "_b[l1_temperature_c]"
     local dep_var_lag_3 "No"
 
-    local indep_var_5 workday_temperature_c l1_temperature_c l2_temperature_c
+    local indep_var_5 `temp_var' l1_temperature_c l2_temperature_c
     local p_test_5    "_b[l1_temperature_c] + _b[l2_temperature_c]"
     local dep_var_lag_5 "No"
 
-    local indep_var_7 workday_temperature_c l1_temperature_c l2_temperature_c l3_temperature_c
+    local indep_var_7 `temp_var' l1_temperature_c l2_temperature_c l3_temperature_c
     local p_test_7    "_b[l1_temperature_c] + _b[l2_temperature_c] + _b[l3_temperature_c]"
     local dep_var_lag_7 "No"
+
+    // Generate dependent variable lags back filling to two-days ago if yesterday is missing
+    gen l_`dep_var' = l.`dep_var'
+    replace l_`dep_var' = l2.`dep_var' if missing(l_`dep_var')
 
     * Second half of the table is simply the first half + Control for lagged dep_var
     forvalues i=1/4 {
         * Get the corresponding column from the first half of the table
         local j = `i' * 2
         local k = `j' - 1
-
-        local indep_var_`j' `indep_var_`k'' l.`dep_var'
+        
+        local indep_var_`j' `indep_var_`k'' l_`dep_var'
         local p_test_`j' `p_test_`k''
         local dep_var_lag_`j' "Yes"
     }

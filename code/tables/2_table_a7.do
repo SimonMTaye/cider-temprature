@@ -52,7 +52,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	local titles `r(model_title)'
 	#delimit ;
 	esttab * using "$output/tables/table_a7.tex", replace ///
-		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared") ///
+		scalars( "num_obs Observations" "r2 R-squared") ///
 		sfmt("%10.9f" "%5.0f" "%5.3f") ///
 		$esttab_opts `header' `titles';
 	#delimit cr;

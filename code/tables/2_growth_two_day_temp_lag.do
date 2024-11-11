@@ -35,8 +35,9 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         local dep_var growth_quality_output_two_days
         local se_spec absorb(pid two_days month#year) cluster(pid)
 
-        local indep_vars temp_c_two_days_workday l1_temp_c_two_days l2_temp_c_two_days l3_temp_c_two_days 
-        local indep_vars_lag `indep_vars' l.growth_quality_output_two_days
+        local temp_var temp_c_two_days_workday
+        local indep_vars `temp_var' l1_temp_c_two_days l2_temp_c_two_days l3_temp_c_two_days 
+        local indep_vars_lag `indep_vars' l_growth_quality_output_two_days
         local base_condition `base_condition_`j''
 
         // First half with no lag
@@ -69,6 +70,28 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         local indep_var_6   `indep_vars_lag'
         local dep_var_lag_6 "Yes"
 
+        // No Prior Computer Experience with no lag
+        local condition_3 `base_condition' &  english==0
+        local indep_var_3   `indep_vars'
+        local dep_var_lag_3 "No"
+
+        // No Prior Computer Experience with lag
+        local condition_4 (`base_condition') & english==0 
+        local indep_var_4   `indep_vars_lag'
+        local dep_var_lag_4 "Yes"
+
+        // Prior Computer Experience with no lag
+        local condition_5 `base_condition' & english==1 
+        local indep_var_5   `indep_vars'
+        local dep_var_lag_5 "No"
+
+        // Prior Computer Experience with lag
+        local condition_6 `base_condition' & english==1 
+        local indep_var_6   `indep_vars_lag'
+        local dep_var_lag_6 "Yes"
+
+
+
         // Macros for storing custom row to display coefficient sum
         local sum_row " Sum of Temperature Coefficents&"
         local pval_row ""
@@ -83,7 +106,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 estadd local dep_var_lag = "`dep_var_lag_`i''"
                 * Store sum of temp coeffcients and p-value 
             eststo model_`i'
-                local coeff_sum _b[temp_c_two_days_workday] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days]
+                local coeff_sum _b[`temp_var'] + _b[l1_temp_c_two_days] + _b[l2_temp_c_two_days] + _b[l3_temp_c_two_days]
                 test  `coeff_sum' = 0 
                 local p_value_`i' = r(p) 
                 local c_sum_`i' = `coeff_sum'
@@ -104,7 +127,8 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         table_header  "Dependent Variable: \textbf{Productivity Growth}" 6
         local header prehead(`r(header_macro)')
 
-        model_titles  "`first_column_`j''" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", pattern(1 0 1 0 1 0) und
+        // "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}"
+        model_titles  "`first_column_`j''" "No English" "English", pattern(1 0 1 0 1 0) und
         local title `r(model_title)'
         // Cutting r2 from the table since it not consistent within the two panels
         #delimit ;

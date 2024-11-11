@@ -80,12 +80,15 @@ save "$data/generated/hi_analysis_daily.dta", replace
     label var learning_half "Dummy indicating whether we are in period where learning happens or not"
 
     sort pid two_days
+    xtset pid two_days
 
     gen diff_quality_output_two_days = quality_output_two_days - quality_output_two_days[_n-1]
     replace diff_quality_output_two_days = quality_output_two_days - quality_output_two_days[_n-2] if diff_quality_output_two_days == .
      
     replace diff_quality_output_two_days=. if two_days==1
     gen growth_quality_output_two_days = diff_quality_output_two_days/ quality_output_two_days[_n-1]
+    gen l_growth_quality_output_two_days = l.growth_quality_output_two_days 
+    replace l_growth_quality_output_two_days = l2.growth_quality_output_two_days if missing(l_growth_quality_output_two_days) 
     
     label var growth_quality_output_two_days "Productivity growth"
     label var temp_c_two_days         "Temperature ($^{\circ}C$)"

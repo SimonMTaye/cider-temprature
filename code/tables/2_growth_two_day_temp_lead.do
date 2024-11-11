@@ -37,9 +37,10 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local dep_var growth_quality_output_two_days
     local se_spec absorb(pid two_days month#year) cluster(pid)
 
+    local temp_var temp_c_two_days_workday
+    local indep_vars `temp_var' ld1_temp_c_two_days ld2_temp_c_two_days ld3_temp_c_two_days 
+    local indep_vars_lag `indep_vars' l_growth_quality_output_two_days
     local base_condition `base_condition_`j''
-    local indep_vars temp_c_two_days_workday ld1_temp_c_two_days ld2_temp_c_two_days ld3_temp_c_two_days 
-    local indep_vars_lag `indep_vars' l.growth_quality_output_two_days
     
 
     local condition_1 `base_condition'
@@ -91,7 +92,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 // Append to p-value row
                 local pval_row_lead "`pval_row_lead' & [`p_value_lead_`i'']"
             // Make sum of all temp coefficients row
-                local coeff_sum_all _b[temp_c_two_days_workday] + _b[ld1_temp_c_two_days] + _b[ld2_temp_c_two_days] + _b[ld3_temp_c_two_days] 
+                local coeff_sum_all _b[`temp_var'] + _b[ld1_temp_c_two_days] + _b[ld2_temp_c_two_days] + _b[ld3_temp_c_two_days] 
                 test `coeff_sum_all' = 0 
                 local p_value_all_`i' = r(p) 
                 local c_sum_all_`i' = `coeff_sum_all'
