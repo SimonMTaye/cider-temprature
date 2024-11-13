@@ -15,13 +15,13 @@ use "$data/generated/hi_hourly_temp_NOAA_indiatime.dta", clear
  	// Subset to workday
 	keep if time_india >= 900 & time_india<=1900
 
-	collapse temperature_c humidity, by(day month year)
+	collapse (mean) workday_temperature_c=temperature_c humidity, by(day month year)
 
 	egen date = group(year month day)
 	sort date
 	
 	* create lags
-		local var temperature_c
+		local var workday_temperature_c
 
 		gen l1_`var' = `var'[_n - 1]
 		gen l2_`var' = `var'[_n - 2]
@@ -47,7 +47,6 @@ use "$data/generated/hi_hourly_temp_NOAA_indiatime.dta", clear
 		gen ld9_`var' = `var'[_n + 9]
 		gen ld10_`var' = `var'[_n + 10]
 
-		rename temperature_c workday_temperature_c
     label var workday_temperature_c "Temperature ($^{\circ}C$)"
 
 save "$data/generated/temperatue_lags.dta", replace
@@ -67,5 +66,20 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
 		gen earnings = performance_earnings + attendance_earnings
 		gen performance_earnings_hr = performance_earnings/count_hours
+
+
+  	// Generate time in office lags
+		xtset pid day_in_study
+		forvalues i=1/10 {
+				gen l`i'_temperature_c = L`i'.temperature_c
+				gen ld`i'_temperature_c = F`i'.temperature_c
+
+				label var l`i'_temperature_c "Lag `i' of Temperature"
+				label var ld`i'_temperature_c "Lead `i' of Temperature"
+
+				label var l`i'_workday_temperature_c "Lag `i' of Temperature"
+				label var ld`i'_workday_temperature_c "Lead `i' of Temperature"
+
+		}
 		
 save "$data/generated/hi_analysis_daily.dta", replace

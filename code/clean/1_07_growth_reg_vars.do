@@ -26,8 +26,11 @@ use "$data/generated/hi_analysis_daily.dta", clear
         local k = `j' - 1
         gen l`i'_temp_c_two_days = (l`j'_temperature_c + l`k'_temperature_c)/2
         gen ld`i'_temp_c_two_days = (ld`j'_temperature_c + ld`k'_temperature_c)/2
+        gen l`i'_temp_c_two_days_workday = (l`j'_workday_temperature_c + l`k'_workday_temperature_c)/2
+        gen ld`i'_temp_c_two_days_workday = (ld`j'_workday_temperature_c + ld`k'_workday_temperature_c)/2
     }
 
+        
     /* Computer related code 
     a23: Have you used a computer before?
     a24: How profficent are you
@@ -61,18 +64,17 @@ use "$data/generated/hi_analysis_daily.dta", clear
     egen temp_c_two_days_workday = mean(workday_temperature_c), by(pid two_days)
 
 
-    label var l1_temperature_c "Lag 1 of Temperature"
-    label var l2_temperature_c "Lag 2 of Temperature"
-    label var l3_temperature_c "Lag 3 of Temperature"
-
-    label var ld1_temperature_c "Lead 1 of Temperature"
-    label var ld2_temperature_c "Lead 2 of Temperature"
-    label var ld3_temperature_c "Lead 3 of Temperature"
-
 save "$data/generated/hi_analysis_daily.dta", replace
 
     * Generate two-day period dta
     collapse first_half quality_output_two_days temp_c_two_days temp_c_two_days_workday  l* (firstnm) max_absents computer english month year, by(pid two_days)
+
+    forvalues i=1/5 {
+        label var l`i'_temp_c_two_days "Lag `i' of Temperature"
+        label var ld`i'_temp_c_two_days "Lead `i' of Temperature"
+        label var l`i'_temp_c_two_days_workday "Lag `i' of Temperature"
+        label var ld`i'_temp_c_two_days_workday "Lead `i' of Temperature"
+    }
 
     drop if two_days == .
 
@@ -93,15 +95,5 @@ save "$data/generated/hi_analysis_daily.dta", replace
     label var growth_quality_output_two_days "Productivity growth"
     label var temp_c_two_days         "Temperature ($^{\circ}C$)"
     label var temp_c_two_days_workday "Temperature ($^{\circ}C$)"
-
-    label var l1_temp_c_two_days "Lag 1 of Temperature"
-    label var l2_temp_c_two_days "Lag 2 of Temperature"
-    label var l3_temp_c_two_days "Lag 3 of Temperature"
-
-    label var ld1_temp_c_two_days "Lead 1 of Temperature"
-    label var ld2_temp_c_two_days "Lead 2 of Temperature"
-    label var ld3_temp_c_two_days "Lead 3 of Temperature"
-
-
 
 save "$data/generated/hi_analysis_twoday.dta", replace  

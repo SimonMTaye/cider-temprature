@@ -28,21 +28,21 @@ use "$data/generated/hi_analysis_daily.dta", clear
     local se_spec absorb(pid day_in_study month#year) cluster(pid)
 
 
-    local temp_var temperature_c
+    local temp_var workday_temperature_c
     local indep_var_1 `temp_var'
     local p_test_1    ""
     local dep_var_lag_1 "No"
 
-    local indep_var_3 `temp_var' l1_temperature_c
-    local p_test_3    "_b[l1_temperature_c]"
+    local indep_var_3 `temp_var' l1_`temp_var'
+    local p_test_3    "_b[l1_`temp_var']"
     local dep_var_lag_3 "No"
 
-    local indep_var_5 `temp_var' l1_temperature_c l2_temperature_c
-    local p_test_5    "_b[l1_temperature_c] + _b[l2_temperature_c]"
+    local indep_var_5 `temp_var' l1_`temp_var' l2_`temp_var'
+    local p_test_5    "_b[l1_`temp_var'] + _b[l2_`temp_var']"
     local dep_var_lag_5 "No"
 
-    local indep_var_7 `temp_var' l1_temperature_c l2_temperature_c l3_temperature_c
-    local p_test_7    "_b[l1_temperature_c] + _b[l2_temperature_c] + _b[l3_temperature_c]"
+    local indep_var_7 `temp_var' l1_`temp_var' l2_`temp_var' l3_`temp_var'
+    local p_test_7    "_b[l1_`temp_var'] + _b[l2_`temp_var'] + _b[l3_`temp_var']"
     local dep_var_lag_7 "No"
 
     // Generate dependent variable lags back filling to two-days ago if yesterday is missing

@@ -18,10 +18,10 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
 
     local base_condition_1 (two_days>2) & (learning_half == 1)
-    local name_1 "$output/tables/table_growth_learning_half.tex"
+    local name_1 "$output/tables/table_growth_learning_half_english.tex"
 
     local base_condition_2 two_days>2 
-    local name_2 "$output/tables/table_growth_full_study.tex"
+    local name_2 "$output/tables/table_growth_full_study_english.tex"
 
     local first_column_1 "\shortstack{First Half\\ of Study}"
     local first_column_2 "Full Sample"
@@ -71,6 +71,28 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         local indep_var_6   `indep_vars_lag'
         local dep_var_lag_6 "Yes"
 
+        // No Prior Computer Experience with no lag
+        local condition_3 `base_condition' &  english==0
+        local indep_var_3   `indep_vars'
+        local dep_var_lag_3 "No"
+
+        // No Prior Computer Experience with lag
+        local condition_4 (`base_condition') & english==0 
+        local indep_var_4   `indep_vars_lag'
+        local dep_var_lag_4 "Yes"
+
+        // Prior Computer Experience with no lag
+        local condition_5 `base_condition' & english==1 
+        local indep_var_5   `indep_vars'
+        local dep_var_lag_5 "No"
+
+        // Prior Computer Experience with lag
+        local condition_6 `base_condition' & english==1 
+        local indep_var_6   `indep_vars_lag'
+        local dep_var_lag_6 "Yes"
+
+
+
         // Macros for storing custom row to display coefficient sum
         local sum_row " Sum of Temperature Coefficents&"
         local pval_row ""
@@ -110,8 +132,8 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         table_header  "Dependent Variable: \textbf{Productivity Growth}" 6
         local header prehead(`r(header_macro)')
 
-        // 
-        model_titles  "`first_column_`j''" "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}" , pattern(1 0 1 0 1 0) und
+        // "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}"
+        model_titles  "`first_column_`j''" "No English" "English", pattern(1 0 1 0 1 0) und
         local title `r(model_title)'
         // Cutting r2 from the table since it not consistent within the two panels
         #delimit ;
