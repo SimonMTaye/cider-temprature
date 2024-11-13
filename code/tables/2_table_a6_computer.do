@@ -71,80 +71,62 @@ use "$data/raw/hours_of_work.dta", clear
 	
 	// new absenteeism + checkin checkout for appendix / extra checks 
 	
-	reghdfe at_present_check workday_temperature_c l1_workday_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe at_present_check workday_temperature_c l1_workday_temperature_c if computer == 0, absorb(pid day_in_study month#year) cluster(pid)
 		summ at_present_check if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
 		estadd scalar sd = r(sd)
+		estadd local computer = "No"
 	eststo
 
-	
-	reghdfe at_present_check high medium low, absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe at_present_check workday_temperature_c l1_workday_temperature_c if computer == 1, absorb(pid day_in_study month#year) cluster(pid)
 		summ at_present_check if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
 		estadd scalar sd = r(sd)
+		estadd local computer = "Yes"
 	eststo
 
-	
-	
-	reghdfe checkin_time workday_temperature_c l1_workday_temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe checkin_time workday_temperature_c l1_workday_temperature_c if hrs_of_work!=. & computer == 0, absorb(pid day_in_study month#year) cluster(pid)
 		summ checkin_time if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
 		estadd scalar sd = r(sd)
+		estadd local computer = "No"
 	eststo
 
-	
-	reghdfe checkin_time high medium low if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe checkin_time workday_temperature_c l1_workday_temperature_c if hrs_of_work!=. & computer == 1, absorb(pid day_in_study month#year) cluster(pid)
 		summ checkin_time if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
 		estadd scalar sd = r(sd)
+		estadd local computer = "Yes"
 	eststo
 
-	
-	
-	reghdfe checkout_time workday_temperature_c l1_workday_temperature_c if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
+		
+	reghdfe checkout_time workday_temperature_c l1_workday_temperature_c if hrs_of_work!=. & computer == 0, absorb(pid day_in_study month#year) cluster(pid)
 		summ checkout_time if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
 		estadd scalar sd = r(sd)
+		estadd local computer = "No"
 	eststo
 
-	
-	reghdfe checkout_time high medium low if hrs_of_work!=., absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe checkout_time workday_temperature_c l1_workday_temperature_c if hrs_of_work!=. & computer == 1, absorb(pid day_in_study month#year) cluster(pid)
 		summ checkout_time if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
 		estadd scalar sd = r(sd)
+		estadd local computer = "Yes"
 	eststo
 
-	
-	
-	reghdfe hrs_of_work workday_temperature_c l1_workday_temperature_c, absorb(pid day_in_study month#year) cluster(pid)
-		summ hrs_of_work if e(sample) == 1 
-		estadd scalar num_obs = e(N)
-		estadd scalar mean = r(mean) 
-		estadd scalar sd = r(sd)
-	eststo
-
-	
-	reghdfe hrs_of_work high medium low, absorb(pid day_in_study month#year) cluster(pid)
-		summ hrs_of_work if e(sample) == 1 
-		estadd scalar num_obs = e(N)
-		estadd scalar mean = r(mean) 
-		estadd scalar sd = r(sd)
-	eststo
-
-
-	table_header "Dependent Variable:" 8
+	table_header "Dependent Variable:" 6
 	local header prehead(`r(header_macro)')
-	model_titles "\textbf{Participant Present} (=1)" "\textbf{Check-in Time}" "\textbf{Check-out Time}" "\textbf{Total Hours of Work}", pattern("1 0 1 0 1 0 1 0")
+	model_titles "\textbf{Participant Present} (=1)" "\textbf{Check-in Time}" "\textbf{Check-out Time}" , pattern("1 0 1 0 1 0")
 	local titles `r(model_title)'
 	#delimit ;
-	esttab * using "$output/tables/table_a6.tex", replace ///
-		scalars("mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared" ) ///
+	esttab * using "$output/tables/table_a6_computer.tex", replace ///
+		scalars("computer Computer?" "mean Dependent Variable Mean"  "num_obs Observations" "r2 R-squared" ) ///
 		$esttab_opts `header' `titles';
 	#delimit cr;
 
