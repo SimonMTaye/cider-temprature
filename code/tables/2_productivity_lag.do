@@ -28,7 +28,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
     local se_spec absorb(pid day_in_study month#year) cluster(pid)
 
 
-    local temp_var workday_temperature_c
+    local temp_var temperature_c
     local indep_var_1 `temp_var'
     local p_test_1    ""
     local dep_var_lag_1 "No"

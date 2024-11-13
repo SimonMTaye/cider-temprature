@@ -37,7 +37,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local dep_var growth_quality_output_two_days
     local se_spec absorb(pid two_days month#year) cluster(pid)
 
-    local temp_var temp_c_two_days_workday
+    local temp_var temp_c_two_days
     local indep_vars `temp_var' ld1_`temp_var' ld2_`temp_var' ld3_`temp_var' 
     local indep_vars_lag `indep_vars' l_growth_quality_output_two_days
     local base_condition `base_condition_`j''
@@ -134,7 +134,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
             "num_obs Observations" 
             "r2 R-squared"
         ) 
-        $esttab_opts keep(temp_c_two_days_workday);
+        $esttab_opts keep(`temp_var');
         
 	#delimit cr;
 
