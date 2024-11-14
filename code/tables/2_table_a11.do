@@ -87,8 +87,3 @@ use "$data/raw/baseline_cleaned.dta", clear
   insert_line `filename' 9 "`row_3'"
   insert_line `filename' 11 "`row_4'"
 
-
-		*cells("mu_1(label(April-September)) mu_2(label(October-March)) p(label(p-value 1 = 2))" ///
-		*	   "sd_1(par label()) sd_2(par label( )) .") label
-		*cells("mu_1(label(April-September) sd_1(par)) mu_2(label(October-March)) p(label(p-value 1 = 2))") label ///
-		*collables("April-September" "October-March" "p-value, 1 = 2")

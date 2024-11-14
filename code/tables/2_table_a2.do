@@ -50,7 +50,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	
 	* average earnings
 	reghdfe performance_earnings_hr temperature_c PM25, absorb(pid day_in_study month#year) cluster(pid)
-		summ performance_earnings if e(sample) == 1 
+		summ performance_earnings_hr if e(sample) == 1 
 		estadd scalar mean = r(mean) 
 		* Store number of observations
 		estadd scalar num_obs = e(N)

@@ -45,7 +45,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	eststo
 	
 	reghdfe performance_earnings_hr temperature_c, absorb(pid day_in_study month#year) cluster(pid)
-		summ performance_earnings if e(sample) == 1 
+		summ performance_earnings_hr if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
 		estadd scalar sd = r(sd)
