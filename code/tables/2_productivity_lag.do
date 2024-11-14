@@ -34,15 +34,15 @@ use "$data/generated/hi_analysis_daily.dta", clear
     local dep_var_lag_1 "No"
 
     local indep_var_3 `temp_var' l1_`temp_var'
-    local p_test_3    "_b[l1_`temp_var']"
+    local p_test_3    "`temp_var' + _b[l1_`temp_var']"
     local dep_var_lag_3 "No"
 
     local indep_var_5 `temp_var' l1_`temp_var' l2_`temp_var'
-    local p_test_5    "_b[l1_`temp_var'] + _b[l2_`temp_var']"
+    local p_test_5    "`temp_var' + _b[l1_`temp_var'] + _b[l2_`temp_var']"
     local dep_var_lag_5 "No"
 
     local indep_var_7 `temp_var' l1_`temp_var' l2_`temp_var' l3_`temp_var'
-    local p_test_7    "_b[l1_`temp_var'] + _b[l2_`temp_var'] + _b[l3_`temp_var']"
+    local p_test_7    "`temp_var' + _b[l1_`temp_var'] + _b[l2_`temp_var'] + _b[l3_`temp_var']"
     local dep_var_lag_7 "No"
 
     // Generate dependent variable lags back filling to two-days ago if yesterday is missing
@@ -91,6 +91,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
     esttab * using "$output/tables/table_productivity.tex", replace 
         `header' `title'
         scalars( 
+            "p_value p-value for Sum of Coeffcients = 0"
             "dep_var_lag Control for Lag of Dependent Variable" 
             "mean Dependent Variable Mean"
             "num_obs Observations" 
