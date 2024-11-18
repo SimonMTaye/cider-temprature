@@ -126,7 +126,7 @@ program define add_stars, rclass
         local stars "\sym{***}"
     }
 
-    local coef_str = string(`coefficient', "%6.5f")
+    local coef_str = string(`coefficient', "%10.5f")
 
     // Return coefficent string with stars
     return local coeff_with_star "`coef_str'`stars'"
