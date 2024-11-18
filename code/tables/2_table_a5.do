@@ -43,7 +43,7 @@ use "$data/generated/absenteeism_time_temp.dta", clear
 
 	table_header "Dependent Variable is" 4
 	local header prehead(`r(header_macro)')
-	model_titles "\shortstack{\textbf{Participant Present}\\(=1)}"  "\textbf{Check-in Time}"  "\textbf{Check-out Time}"  "\shortstack{\textbf{Total Hours of}\\ \textbf{Work}}" 
+	model_titles "\shortstack{\textbf{Participant Present}\\(=1)}"  "\textbf{Check-in Time}"  "\textbf{Check-out Time}"  "\shortstack{\textbf{Total Hours at}\\ \textbf{Work}}" 
 	local titles `r(model_title)'
 
 	#delimit ;
