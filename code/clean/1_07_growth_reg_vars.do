@@ -20,6 +20,9 @@ use "$data/generated/hi_analysis_daily.dta", clear
     gen absents = 1 if count<12 
     egen max_absents = max(absents), by(pid)
 
+    gen learning_half = day_in_study < 17
+    label var learning_half "Dummy indicating whether we are in period where learning happens or not"
+
     * generate two day lags and leads, taking average over the past two days
     forvalues i=1/5 {
         local j = (`i' * 2) 
@@ -28,6 +31,9 @@ use "$data/generated/hi_analysis_daily.dta", clear
         gen ld`i'_temp_c_two_days = (ld`j'_temperature_c + ld`k'_temperature_c)/2
         gen l`i'_temp_c_two_days_workday = (l`j'_workday_temperature_c + l`k'_workday_temperature_c)/2
         gen ld`i'_temp_c_two_days_workday = (ld`j'_workday_temperature_c + ld`k'_workday_temperature_c)/2
+
+        gen l`i'_heat_index_two_days = (l`j'_heat_index + l`k'_heat_index)/2
+        gen ld`i'_heat_index_two_days = (ld`j'_heat_index + ld`k'_heat_index)/2
     }
 
         
@@ -62,23 +68,26 @@ use "$data/generated/hi_analysis_daily.dta", clear
     egen quality_output_two_days = mean(m_quality_output), by(pid two_days)
     egen temp_c_two_days = mean(temperature_c), by(pid two_days)
     egen temp_c_two_days_workday = mean(workday_temperature_c), by(pid two_days)
+    egen heat_index_two_days = mean(heat_index), by(pid two_days)
 
 
 save "$data/generated/hi_analysis_daily.dta", replace
 
     * Generate two-day period dta
-    collapse first_half quality_output_two_days temp_c_two_days temp_c_two_days_workday  l* (firstnm) max_absents computer english month year, by(pid two_days)
+    collapse first_half quality_output_two_days temp_c_two_days temp_c_two_days_workday heat_index_two_days l* (firstnm) max_absents computer english month year, by(pid two_days)
 
     forvalues i=1/5 {
         label var l`i'_temp_c_two_days "Lag `i' of Temperature"
         label var ld`i'_temp_c_two_days "Lead `i' of Temperature"
         label var l`i'_temp_c_two_days_workday "Lag `i' of Temperature"
         label var ld`i'_temp_c_two_days_workday "Lead `i' of Temperature"
+        label var l`i'_heat_index_two_days "Lag `i' of Heat Index"
+        label var ld`i'_heat_index_two_days "Lead `i' of Heat Index"
     }
 
     drop if two_days == .
 
-    gen learning_half = two_days < 9
+    replace learning_half = two_days < 9
     label var learning_half "Dummy indicating whether we are in period where learning happens or not"
 
     sort pid two_days
@@ -95,5 +104,6 @@ save "$data/generated/hi_analysis_daily.dta", replace
     label var growth_quality_output_two_days "Productivity growth"
     label var temp_c_two_days         "Temperature ($^{\circ}C$)"
     label var temp_c_two_days_workday "Temperature ($^{\circ}C$)"
+    label var heat_index_two_days      "Heat Index"
 
 save "$data/generated/hi_analysis_twoday.dta", replace  

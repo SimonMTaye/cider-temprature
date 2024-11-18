@@ -16,7 +16,17 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	bysort pid: egen day_1_quality = max(temp)
 	gen m_quality_output_rel = m_quality_output/day_1_quality
 
+
+	* generate productivity growth
 		
+	sort pid day_in_study
+	xtset pid day_in_study
+	gen growth_quality_output = (m_quality_output - m_quality_output[_n-1]) / m_quality_output[_n-1]
+		// replace with prod two days ago
+	replace growth_quality_output = (m_quality_output - m_quality_output[_n-2]) / m_quality_output[_n-2] if missing(m_quality_output[_n-1])
+	gen l_growth_quality_output = l.growth_quality_output 
+	replace l_growth_quality_output = l2.growth_quality_output if missing(l_growth_quality_output) 
+	
 	
 	* temp bins by day (so weird mix of people but should be lower bound to continued exposure)
 	sum temperature_c, d

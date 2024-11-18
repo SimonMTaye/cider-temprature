@@ -74,8 +74,14 @@ use "$data/generated/hi_analysis_daily.dta", clear
 				gen l`i'_temperature_c = L`i'.temperature_c
 				gen ld`i'_temperature_c = F`i'.temperature_c
 
+				gen l`i'_heat_index = L`i'.heat_index
+				gen ld`i'_heat_index = F`i'.heat_index
+
 				label var l`i'_temperature_c "Lag `i' of Temperature"
 				label var ld`i'_temperature_c "Lead `i' of Temperature"
+
+				label var l`i'_heat_index "Lag `i' of Heat Index"
+				label var ld`i'_heat_index "Lead `i' of Heat Index"
 
 				label var l`i'_workday_temperature_c "Lag `i' of Temperature"
 				label var ld`i'_workday_temperature_c "Lead `i' of Temperature"
