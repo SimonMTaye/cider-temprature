@@ -69,7 +69,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 local pval_row "`pval_row' & [`p_value_`i'']"
         }
 
-        local custom_row "`sum_row' \\ `pval_row' \\ [0.5em]"
+        local custom_row "`sum_row' \\ `pval_row' \\ \hline \\ [-1.7ex]"
 
         * Output table
         table_header  "Dependent Variable: \textbf{Productivity Growth}" 2

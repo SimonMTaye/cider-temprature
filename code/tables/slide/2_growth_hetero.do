@@ -62,7 +62,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local sum_row " Sum of Temperature Coefficents&"
     local pval_row ""
 
-    forvalues i=2/5 {
+    forvalues i=2/3 {
         reghdfe `dep_var' `indep_var_`i'' if `condition_`i'', `se_spec' 
             summ `dep_var' if e(sample) == 1 
             estadd scalar mean = r(mean) 
@@ -98,11 +98,11 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local custom_row "`sum_row' \\ `pval_row' \\ [1em]"
 
     * Output table
-    table_header  "Dependent Variable: \textbf{Productivity Growth}" 4
+    table_header  "Dependent Variable: \textbf{Productivity Growth}" 2
     local header prehead(`r(header_macro)')
 
     // 
-    model_titles  "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}" "No English" "English Speaker" , und
+    model_titles  "\shortstack{No Prior\\ Computer Experience}" "\shortstack{Computer Experience}", und // "No English" "English Speaker" , und
     local title `r(model_title)'
     // Cutting r2 from the table since it not consistent within the two panels
     #delimit ;

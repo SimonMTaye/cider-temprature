@@ -33,14 +33,20 @@ preserve
 		scalar b1 = _b[day_1]
 		scalar b2 = _b[day_2]
 
-		* Get min and max of x
-		* Plot
-		twoway ///
+		* Plot without fitted regression
+	twoway ///
+				(scatter `output_var' day_in_study) ///
+				,ytitle(Output Relative to First Day) xtitle(Day in Study) xscale(r(1(1)28)) xlabel(2(4)28) ylabel(1(1)5) yscale(r(1(1)5))  ///
+				legend(off)  
+		graph export "$output/figures/figure_learning.pdf", replace
+	
+		* Plot with fitted regression
+	twoway ///
 				(scatter `output_var' day_in_study) ///
 				/// (qfit `output_var' day_in_study) ///
 				(function yhat = b0 + b1*x, range(1 17) color(eltblue)) ///
-				(function yhat = b0 + b1*16 + b2*(x - 17), range(17 30) color(eltblue)) ///
-				,ytitle(Output Relative to First Day) xscale(r(1(1)28)) xlabel(2(4)28) ylabel(1(1)5) yscale(r(1(1)5))  ///
+				(function yhat = b0 + b1*16 + b2*(x - 17), range(17 28) color(eltblue)) ///
+				,ytitle(Output Relative to First Day) xtitle(Day in Study) xscale(r(1(1)28)) xlabel(2(4)28) ylabel(1(1)5) yscale(r(1(1)5))  ///
 				legend(off)  
 
 		graph export "$output/figures/figure_learning_piecewise.pdf", replace
@@ -53,9 +59,9 @@ preserve
 			(scatter m_quality_output_rel day_in_study if computer==0, color(eltblue))  ///
 			(qfit m_quality_output_rel day_in_study if computer==0, lwidth(medium) color(eltblue))  ///
 			(scatter m_quality_output_rel day_in_study if computer==1, color(navy))  ///
-			(qfit m_quality_output_rel day_in_study if computer==1, color(navy)), ///
-			ytitle(Output Relative to First Day) xscale(r(1(1)28)) xlabel(2(2)28) ylabel(1(1)5) ylabel(0(2)8) yscale(r(1(1)8)) ///
-			legend(label(1 "No prior computer experience") label(2) label(3 "Prior computer experience") label(4) order(1 3) rows(1)) ///
+			(qfit m_quality_output_rel day_in_study if computer==1, color(navy)), name(test) ///
+			ytitle(Output Relative to First Day) xscale(r(1(1)28)) xlabel(2(2)28) ylabel(1(1)5) ylabel(1(1)5) yscale(r(1(1)5)) ///
+			legend(label(1 "No prior computer experience") label(2) label(3 "Prior computer experience") label(4) order(1 3) rows(1) size(medlarge)) ///
 		
 		graph export "$output/figures/figure_learning_computer.pdf", replace
 	

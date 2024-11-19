@@ -99,8 +99,8 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 local pval_row_all "`pval_row_all' & [`p_value_all_`i'']"
     }
 
-    local all_row "`sum_row_all' \\ `pval_row_all' \\ [0.5em]"
-    local lead_row "`sum_row_lead' \\ `pval_row_lead' \\ [0.5em]"
+    local all_row "`sum_row_all' \\ `pval_row_all' \\ \hline \\ [-1.7ex]"
+    local lead_row "`sum_row_lead' \\ `pval_row_lead' \\ \hline \\ [-1.7ex]"
 
 	table_header "Dependent Variable: \textbf{Productivity Growth}" 2
 	local header prehead(`r(header_macro)')
