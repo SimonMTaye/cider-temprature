@@ -48,13 +48,17 @@ set scheme eop
 
 // Flags for running cdoe
 //      cleaning_dos generates generated data from raw data
-local cleaning_dos  1
+local cleaning_dos      1
 //      tables runs code to generate all tables
-local tables        1
+local tables            1
 //      figures runs code to generate all figures
-local figures       1
+local figures           1
 // temp macro for running new tables
-local new_tables    1
+local new_tables        1
+// run slide generating macro
+local slides            1
+// run other code
+local other             1
 
 *** Runing cleaning do files
     if `cleaning_dos' == 1 {
@@ -117,6 +121,26 @@ local new_tables    1
         do "$root/code/tables/2_growth_placebo.do"
         do "$root/code/tables/2_growth_two_day_temp_lead.do"
         do "$root/code/tables/2_productivity_lag.do"
+    }
+
+    if `slides' == 1 {
+        do "$root/code/tables/2_helper.do"
+        do "$root/code/tables/slide/2_growth_robustness.do"
+        do "$root/code/tables/slide/2_growth_robustness_heat.do"
+        do "$root/code/tables/slide/2_growth_placebo.do"
+        do "$root/code/tables/slide/2_growth_lead.do"
+        do "$root/code/tables/slide/2_growth_hetero_one.do"
+        do "$root/code/tables/slide/2_growth_hetero.do"
+        do "$root/code/tables/slide/2_productivity.do"
+        do "$root/code/tables/slide/2_productivity_daily.do"
+        do "$root/code/tables/slide/2_productivity_heat.do"
+        do "$root/code/tables/slide/2_productivity_pollution.do"
+        do "$root/code/figures/slides/2_figure_heterogeniety.do"
+        do "$root/code/figures/slides/2_figure_temperature.do"
+    }
+
+    if `other' == 1 {
+        do "$root/code/other/3_split_pick.do"
     }
 
 

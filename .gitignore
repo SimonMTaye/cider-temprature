@@ -9,3 +9,10 @@ preview/*.fls
 preview/*.log
 preview/*.gz
 preview/*.pdf
+preview/*.nav
+preview/*.dvi
+preview/*.out
+preview/*.snm
+preview/*.toc
+*.sh
+.githooks
