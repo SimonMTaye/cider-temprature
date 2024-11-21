@@ -8,7 +8,7 @@ Author:		Simon Taye
 ****************************************************************/
 
 // For fragments only
-global esttab_opts_fragment label nonote noobs nodepvars nocons se nomtitle
+global esttab_opts_fragment label nonote noobs nodepvars nocons se nomtitle star(* 0.10 ** 0.05 *** 0.010)
 // For all other tables
 global esttab_opts $esttab_opts_fragment prefoot("[0.5em] \hline") postfoot("\bottomrule \end{tabular}}")
 
@@ -101,6 +101,47 @@ program define insert_line
 
 end
 
+cap program drop delete_line
+program define delete_line
+    // Program to insert a line into a file at a specific line number
+    // Usage: insert_line filename linenum "text_to_insert"
+
+    // Capture the arguments: filename, line number, and text to insert
+    args filename linenum 
+    local linenum = real("`linenum'")
+
+	// Specify file paths
+	// Open input file for reading
+	file open fin using "`filename'", read text
+    tempfile temp_file
+	file open fout using "`temp_file'", write replace text
+
+
+	// Read the input file line by line
+	file read fin doc_line
+	// Initialize line counter
+	local line_counter 1
+
+	while (`r(eof)' == 0) {
+			// If the current line is the line where we want to insert text, write the new text
+            if `line_counter' != `linenum' {
+                file write fout "`doc_line'" _n
+            }
+            file read fin doc_line
+			// Increment the line counter
+			local line_counter = `line_counter' + 1
+	}
+	file write fout "`doc_line'" _n
+
+	// Close the input and output files
+	file close fin
+	file close fout
+
+    copy "`temp_file'" "`filename'", replace
+
+end
+
+
 cap program drop add_stars
 program define add_stars, rclass
     // Capture the arguments: filename, line number, and text to insert
@@ -126,7 +167,7 @@ program define add_stars, rclass
         local stars "\sym{***}"
     }
 
-    local coef_str = string(`coefficient', "%10.5f")
+    local coef_str = string(`coefficient', "%10.4f")
 
     // Return coefficent string with stars
     return local coeff_with_star "`coef_str'`stars'"
