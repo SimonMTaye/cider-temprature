@@ -60,15 +60,23 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local indep_var_6   `indep_var_5' l_growth_quality_output_two_days
     local dep_var_lag_6 "Yes"
 
-    // First half with three lag
+    /* 4 lag
     local condition_7 `base_condition'
     local indep_var_7   `temp_var' l1_`temp_var' l2_`temp_var' l3_`temp_var' l4_`temp_var'
     local dep_var_lag_7 "No"
 
-    // First half with three lag and lag dep
+    
     local condition_8 `base_condition'
     local indep_var_8   `indep_var_7' l_growth_quality_output_two_days
     local dep_var_lag_8 "Yes"
+    */
+
+    // 3 lag + hrs_of_work_control
+    local condition_7 `base_condition'
+    local indep_var_7   `indep_var_6' hrs_of_work 
+    local dep_var_lag_7 "Yes"
+
+
 
 
 
