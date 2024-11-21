@@ -102,4 +102,17 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
 	label var temperature_c "Temperature ($^{\circ}C$)"
 
+	// Median age is 33
+	xtile age_m = bs_age, nq(2)
+	replace age_m = age_m - 1
+
+	gen edu = 0
+	replace edu = a12_a if a12 == 2
+	replace edu = 12 if a12 > 2
+	 
+ 	// Median education is 10th grade
+	// Note: all education above 12 is code as 12
+	xtile edu_m = edu, nq(2)
+	replace edu_m = edu_m - 1
+	
 save "$data/generated/hi_analysis_daily.dta", replace

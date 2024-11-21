@@ -74,7 +74,9 @@ use "$data/generated/hi_analysis_daily.dta", clear
 save "$data/generated/hi_analysis_daily.dta", replace
 
     * Generate two-day period dta
-    collapse first_half quality_output_two_days temp_c_two_days temp_c_two_days_workday heat_index_two_days l* (firstnm) max_absents computer english month year, by(pid two_days)
+    collapse first_half quality_output_two_days temp_c_two_days temp_c_two_days_workday heat_index_two_days l* ///
+             (firstnm) max_absents computer english age_m edu_m month year ///
+             (sum) hrs_of_work, by(pid two_days)
 
     forvalues i=1/5 {
         label var l`i'_temp_c_two_days "Lag `i' of Temperature"
@@ -87,7 +89,7 @@ save "$data/generated/hi_analysis_daily.dta", replace
 
     drop if two_days == .
 
-    replace learning_half = two_days < 9
+    replace learning_half = two_days < 9 
     label var learning_half "Dummy indicating whether we are in period where learning happens or not"
 
     sort pid two_days
