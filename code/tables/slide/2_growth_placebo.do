@@ -69,13 +69,13 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 local pval_row "`pval_row' & [`p_value_`i'']"
         }
 
-        local custom_row "`sum_row' \\ `pval_row' \\ \hline \\ [-1.7ex]"
+        local custom_row "`sum_row' \\ `pval_row' \\"
 
         * Output table
         table_header  "Dependent Variable: \textbf{Productivity Growth}" 2
         local header prehead(`r(header_macro)')
 
-        model_titles "\shortstack{First Half\\ of Study}" "\shortstack{Second Half\\ of Study}", und
+        model_titles "\shortstack{First \\Half of Study}" "\shortstack{Second Half\\ of Study}", und
         local title `r(model_title)'
         // Cutting r2 from the table since it not consistent within the two panels
         #delimit ;
@@ -87,11 +87,13 @@ use "$data/generated/hi_analysis_twoday.dta", clear
                 "num_obs Observations" 
                 "r2 R-squared"
             ) 
-            $esttab_opts keep(`temp_var');
+            $esttab_opts keep(`temp_var') ;
         #delimit cr;
 
 
 
         insert_line `filename' 5 "`custom_row'"
+        delete_line `filename' 6 
+        delete_line `filename' 6 
 
     //nl (m_quality_output  = {b0} + {b1}*two_days + {b2}*max(0, day_in_study - {b3})), initial(b3 25) iterate(1000000)
