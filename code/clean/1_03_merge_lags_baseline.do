@@ -67,6 +67,23 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		gen earnings = performance_earnings + attendance_earnings
 		gen performance_earnings_hr = performance_earnings/count_hours
 
+  	preserve
+			// Generate a dataset with lagged mean observed temperature
+			egen mean_temperature_c = mean(temperature_c), by(day_in_study)
+			keep mean_temperature_c day_in_study
+			duplicates drop
+
+		
+			tset day_in_study
+			forvalues i = 1/10 {
+				gen l`i'_mean_temperature_c = L`i'.mean_temperature_c
+			}
+			tempfile mean_lags
+			save `mean_lags', replace
+		restore
+		
+		
+		merge m:1 day_in_study using `mean_lags', nogen
 
   	// Generate time in office lags
 		xtset pid day_in_study
@@ -74,6 +91,12 @@ use "$data/generated/hi_analysis_daily.dta", clear
 				gen l`i'_temperature_c = L`i'.temperature_c
 				gen ld`i'_temperature_c = F`i'.temperature_c
 
+				// Replace missing lags with average experienced temperature
+				replace l`i'_temperature_c = l`i'_mean_temperature_c if missing(l`i'_temperature_c)
+				// Replace lag in the first few days with work_day_lags
+				replace l`i'_temperature_c = l`i'_workday_temperature_c if missing(l`i'_temperature_c) & day_in_study <= `i'
+
+    		
 				gen l`i'_heat_index = L`i'.heat_index
 				gen ld`i'_heat_index = F`i'.heat_index
 
