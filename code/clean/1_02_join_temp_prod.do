@@ -9,6 +9,27 @@ Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
 use "$data/raw/hourly_productivity.dta", clear 
+
+	sort pid day_in_study
+
+ 	// 	The first 5-min block where the participant started typing
+	egen first_entry_t = min(clock) if cum_total_entries > 0, by(pid day_in_study)
+	egen first_entry = max(first_entry_t), by(pid day_in_study)
+	label var first_entry "First time output is recorded for pid / day in study"
+	by pid day_in_study: gen no_output = cum_total_entries == cum_total_entries[_n - 1]
+ 	// The last 5-min block where the participant is typing
+	egen last_entry_t = max(clock) if !no_output , by(pid day_in_study)
+	egen last_entry = max(last_entry_t), by(pid day_in_study)
+	label var last_entry "Last time output is recorded for pid / day in study"
+
+	format last_entry %tc
+	format first_entry %tc
+
+	drop first_entry_t last_entry_t no_output
+
+	gen hours_working = (last_entry - first_entry) / (3600 * 1000)
+	label var hours_working "Number of hours between first and last moment of work"
+	
 	
 	* drop obs who dropped out at baseline
 	keep if dropout_category !=2
@@ -46,12 +67,14 @@ use "$data/raw/hourly_productivity.dta", clear
 	keep if time>=900 
 	keep if time<=2000
 
+	//keep if clock >= first_entry & clock <= last_entry
+
 	drop if non_work_time == 1
 
 
 	collapse 	(mean) salience fraction_high  ///
 						(firstnm) date day month year day_type   ///
-						(first) checkout_time=checkout checkin_time=checkin ///
+						(first) first_entry last_entry hours_working checkout_time=checkout checkin_time=checkin  ///
 						(sum) performance_earnings attendance_earnings typing_time correct_entries voluntary_pause mistakes_number, by(pid day_in_study time)
 
 	rename time time_india
@@ -120,7 +143,7 @@ save "$data/generated/hi_analysis_hourly.dta", replace
 									fraction_high count_hours (firstnm) date day month year day_type ///
 									(sum) quality_output performance_earnings attendance_earnings typing_time ///
 									correct_entries voluntary_pause mistakes_number total_entries ///
-									mistakes_per_entries_00 (first) checkout_time checkin_time ///
+									mistakes_per_entries_00 (first) checkout_time checkin_time hours_working first_entry last_entry ///
 									, by(pid day_in_study)
 	
 	

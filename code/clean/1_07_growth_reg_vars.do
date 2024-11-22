@@ -75,8 +75,8 @@ save "$data/generated/hi_analysis_daily.dta", replace
 
     * Generate two-day period dta
     collapse first_half quality_output_two_days temp_c_two_days temp_c_two_days_workday heat_index_two_days l* ///
-             (firstnm) max_absents computer english age_m edu_m month year ///
-             (sum) hrs_of_work, by(pid two_days)
+             (firstnm) max_absents computer english age_m edu_m month year  ///
+             (sum) hrs_of_work hours_working, by(pid two_days)
 
     forvalues i=1/5 {
         label var l`i'_temp_c_two_days "Lag `i' of Temperature"
