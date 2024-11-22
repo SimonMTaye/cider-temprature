@@ -50,15 +50,15 @@ set scheme eop
 //      cleaning_dos generates generated data from raw data
 local cleaning_dos      1
 //      tables runs code to generate all tables
-local tables            0
+local tables            1
 //      figures runs code to generate all figures
-local figures           0
+local figures           1
 // temp macro for running new tables
-local new_tables        0
+local new_tables        1
 // run slide generating macro
 local slides            1
 // run other code
-local other             0
+local other             1
 
 *** Runing cleaning do files
     if `cleaning_dos' == 1 {
@@ -125,6 +125,7 @@ local other             0
 
     if `slides' == 1 {
         do "$root/code/tables/2_helper.do"
+        do "$root/code/tables/slide/2_table_absenteeism.do"
         do "$root/code/tables/slide/2_growth_robustness.do"
         do "$root/code/tables/slide/2_growth_robustness_heat.do"
         do "$root/code/tables/slide/2_growth_placebo.do"
@@ -140,10 +141,12 @@ local other             0
         do "$root/code/figures/slides/2_figure_heterogeniety_others.do"
         do "$root/code/figures/slides/2_figure_temperature.do"
         do "$root/code/figures/slides/2_figure_quantiles.do"
+        do "$root/code/figures/slides/2_figure_quantiles_cog.do"
     }
 
     if `other' == 1 {
         do "$root/code/other/3_split_pick.do"
+        do "$root/code/other/3_split_pick_pid.do"
     }
 
 
