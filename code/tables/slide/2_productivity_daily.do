@@ -51,8 +51,8 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		estadd scalar sd = r(sd)
 	eststo
 	
-	reghdfe performance_earnings_hr `indep_vars', absorb(pid day_in_study month#year) cluster(pid)
-		summ performance_earnings_hr if e(sample) == 1 
+	reghdfe performance_earnings `indep_vars', absorb(pid day_in_study month#year) cluster(pid)
+		summ performance_earnings if e(sample) == 1 
 		estadd scalar num_obs = e(N)
 		estadd scalar mean = r(mean) 
 		estadd scalar sd = r(sd)
