@@ -102,7 +102,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local header prehead(`r(header_macro)')
 
     // 
-    model_titles  "Below Median Age (<= 33 yrs)" "Above Median Age (> 33)" "\shortstack{Below Median Education\\ (upto 10th grade)}" "\shortstack{Above Median Education\\ (11th grade and above)}" , und
+    model_titles  "Below Median Age (<= 33 yrs)" "Above Median Age (> 33)" "B. Median Education" "A. Median Education" , und
     local title `r(model_title)'
     // Cutting r2 from the table since it not consistent within the two panels
     #delimit ;
