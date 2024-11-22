@@ -42,7 +42,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
     // First half with one lag
     local condition_3 `base_condition'
-    local indep_var_3   `temp_var' l1_`temp_var'
+    local indep_var_3   `temp_var' l1_`temp_var' l2_`temp_var'
     local dep_var_lag_3 "No"
 
     // First half with one lag and lag dep

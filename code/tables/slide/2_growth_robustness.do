@@ -42,7 +42,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
     // First half with one lag
     local condition_3 `base_condition'
-    local indep_var_3   `temp_var' l1_`temp_var'
+    local indep_var_3   `temp_var' l1_`temp_var'  l2_`temp_var'
     local dep_var_lag_3 "No"
 
     // First half with one lag and lag dep
@@ -97,7 +97,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         eststo model_`i'
             local coeff_sum
             foreach var in `indep_var_`i'' {
-                if "`var'" != "l_growth_quality_output_two_days" {
+                if "`var'" != "l_growth_quality_output_two_days" { // & "`var'" != "`temp_var'" {
                     local coeff_sum `coeff_sum' _b[`var'] + 
                 }
             }
