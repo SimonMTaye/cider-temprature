@@ -100,7 +100,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     }
 
     local all_row "`sum_row_all' \\ `pval_row_all' \\ \hline \\ [-1.7ex]"
-    local lead_row "`sum_row_lead' \\ `pval_row_lead' \\ \hline \\ [-1.7ex]"
+    local lead_row "`sum_row_lead' \\ `pval_row_lead' \\ "
 
 	table_header "Dependent Variable: \textbf{Productivity Growth}" 2
 	local header prehead(`r(header_macro)')
@@ -120,3 +120,5 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
     insert_line `filename' 4 "`all_row'"
     insert_line `filename' 5 "`lead_row'"
+    delete_line `filename' 6
+    delete_line `filename' 6
