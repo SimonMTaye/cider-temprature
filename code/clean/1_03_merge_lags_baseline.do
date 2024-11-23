@@ -97,30 +97,26 @@ use "$data/generated/hi_analysis_daily.dta", clear
 				gen l`i'_temperature_c = L`i'.temperature_c
 				gen ld`i'_temperature_c = F`i'.temperature_c
 
-				// Replace missing lags with average experienced temperature
+				gen l`i'_heat_index = L`i'.heat_index
+				gen ld`i'_heat_index = F`i'.heat_index
+
+    		// Back filling missing lags
+				/* Replace missing lags with average experienced temperature
 				replace l`i'_temperature_c = l`i'_mean_temperature_c if missing(l`i'_temperature_c)
 				// Replace lag in the first few days with work_day_lags
 				replace l`i'_temperature_c = l`i'_workday_temperature_c if missing(l`i'_temperature_c) & day_in_study <= `i'
-
 				// Do the same for leads
 				replace ld`i'_temperature_c = ld`i'_mean_temperature_c if missing(ld`i'_temperature_c)
 				// Replace lag in the first few days with work_day_lags
 				replace ld`i'_temperature_c = ld`i'_workday_temperature_c if missing(ld`i'_temperature_c) & (day_in_study +`i' > 28)
-
-
-    		
-				gen l`i'_heat_index = L`i'.heat_index
-				gen ld`i'_heat_index = F`i'.heat_index
-
 				// Replace missing lags with average experienced temperature
 				replace l`i'_heat_index = l`i'_mean_heat_index if missing(l`i'_heat_index)
 				// Replace lag in the first few days with work_day_lags
 				replace l`i'_heat_index = l`i'_workday_heat_index if missing(l`i'_heat_index) & day_in_study <= `i'
-
-
     		// Do the same for leads
 				replace ld`i'_heat_index = ld`i'_mean_heat_index if missing(ld`i'_heat_index)
 				replace ld`i'_heat_index = ld`i'_workday_heat_index if missing(ld`i'_heat_index) & (day_in_study +`i' > 28)
+				*/
 
 
 
