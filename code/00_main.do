@@ -50,15 +50,15 @@ set scheme eop
 //      cleaning_dos generates generated data from raw data
 local cleaning_dos      1
 //      tables runs code to generate all tables
-local tables            1
+local tables            0
 //      figures runs code to generate all figures
-local figures           1
+local figures           0
 // temp macro for running new tables
 local new_tables        1
 // run slide generating macro
-local slides            1
+local slides            0
 // run other code
-local other             1
+local other             0
 
 *** Runing cleaning do files
     if `cleaning_dos' == 1 {
@@ -102,7 +102,7 @@ local other             1
         // INFO: Orginially part of abseentism.do
         do "$root/code/tables/2_table_a6.do"
         // INFO: Orginially part of coginition.do
-        do "$root/code/tables/2_table_a7.do"
+        do "$root/code/tables/2_table_a7_lags.do"
         // INFO: Orginially part of learning.do
         do "$root/code/tables/2_table_a8.do"
         do "$root/code/tables/2_table_a9.do"
@@ -115,6 +115,9 @@ local other             1
 
     if `new_tables' == 1 {
         do "$root/code/tables/2_helper.do"
+        do "$root/code/tables/2_growth_two_day_temp_lag_change.do"
+        do "$root/code/tables/2_productivity_temp_lag_change.do"
+        do "$root/code/tables/2_table_a7_lags.do"
         do "$root/code/tables/2_table_a6_computer.do"
         do "$root/code/tables/2_growth_two_day_temp_lag.do"
         do "$root/code/tables/2_growth_two_day_temp_lag_english.do"
