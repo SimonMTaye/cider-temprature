@@ -62,6 +62,7 @@ end
 
 cap program drop insert_line
 program define insert_line
+    file close _all
     // Program to insert a line into a file at a specific line number
     // Usage: insert_line filename linenum "text_to_insert"
 
@@ -103,6 +104,7 @@ end
 
 cap program drop delete_line
 program define delete_line
+    file close _all
     // Program to insert a line into a file at a specific line number
     // Usage: insert_line filename linenum "text_to_insert"
 
