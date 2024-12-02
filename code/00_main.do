@@ -50,15 +50,15 @@ set scheme eop
 //      cleaning_dos generates generated data from raw data
 local cleaning_dos      1
 //      tables runs code to generate all tables
-local tables            0
+local tables            1
 //      figures runs code to generate all figures
-local figures           0
+local figures           1
 // temp macro for running new tables
 local new_tables        1
 // run slide generating macro
-local slides            0
+local slides            1
 // run other code
-local other             0
+local other             1
 
 *** Runing cleaning do files
     if `cleaning_dos' == 1 {
@@ -115,6 +115,9 @@ local other             0
 
     if `new_tables' == 1 {
         do "$root/code/tables/2_helper.do"
+        do "$root/code/tables/2_growth_cutoff_change_hetero_comp.do"
+        do "$root/code/tables/2_growth_cutoff_change_hetero_eng.do"
+        do "$root/code/tables/2_growth_cutoff_change_full.do"
         do "$root/code/tables/2_growth_two_day_temp_lag_change.do"
         do "$root/code/tables/2_productivity_temp_lag_change.do"
         do "$root/code/tables/2_table_a7_lags.do"
