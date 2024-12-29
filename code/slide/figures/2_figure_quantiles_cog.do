@@ -8,7 +8,6 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all 
 use "$data/generated/hi_analysis_daily.dta", clear 
 	
 	forvalues i=1/6 {

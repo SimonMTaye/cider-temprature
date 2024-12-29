@@ -43,24 +43,29 @@ Author:		Simon Taye
     sysdir set PLUS "$adodir"
     adopath ++ PLUS
 
+// Load helper scripts with custom programs
+do "$root/code/run_recursive.do"
+do "$root/code/table_helpers.do"
+
 //      set custom figure scheme
 set scheme eop
 
 // Flags for running cdoe
 //      cleaning_dos generates generated data from raw data
-local cleaning_dos      1
-//      tables runs code to generate all tables
-local tables            1
-//      figures runs code to generate all figures
-local figures           1
-// temp macro for running new tables
-local new_tables        1
-// run slide generating macro
+local cleaning_dos      0
+//      generate figures and tables used in slides (2024-11)
 local slides            1
 // run other code
 local other             1
+// run code for generating figures and tables in old draft (2024-08)
+local old_draft         1
+
+local new_tables        1
+local new_figures       1
+
 
 *** Runing cleaning do files
+    // NOTE: run_dofiles doesn't sort files when running so run cleaning do files manually 
     if `cleaning_dos' == 1 {
         do "$root/code/clean/1_01_temp.do"
         do "$root/code/clean/1_02_join_temp_prod.do"
@@ -71,88 +76,26 @@ local other             1
         do "$root/code/clean/1_07_growth_reg_vars.do"
         do "$root/code/clean/1_08_absenteeism.do"
     }
-
-
-
-    if `figures' == 1 {
-        // INFO: Orginially named 'learning.do'
-        do "$root/code/figures/2_figure_1.do"
-        // INFO: Orginially part of learning with temp bins.do
-        do "$root/code/figures/2_figure_2.do"
-        // INFO: Orignially part of productivity.do
-        do "$root/code/figures/2_figure_a2.do"
+    
+    if `slides' == 1 {
+        run_dofiles $root/code/slide
     }
-
-
-// esttab options for tweaking output
-
-    if `tables' == 1 {
-        do "$root/code/tables/2_helper.do"
-        do "$root/code/tables/2_table_1.do"
-        // INFO: Orginially named 'learning.do'
-        do "$root/code/tables/2_table_2.do"
-        do "$root/code/tables/2_table_3.do"
-        // INFO: Orignially part of productivity.do
-        do "$root/code/tables/2_table_a1.do"
-        do "$root/code/tables/2_table_a2.do"
-        do "$root/code/tables/2_table_a3.do"
-        do "$root/code/tables/2_table_a4.do"
-        // INFO: Orginially part of learning with temp bins.do
-        do "$root/code/tables/2_table_a5.do"
-        // INFO: Orginially part of abseentism.do
-        do "$root/code/tables/2_table_a6.do"
-        // INFO: Orginially part of coginition.do
-        do "$root/code/tables/2_table_a7_lags.do"
-        // INFO: Orginially part of learning.do
-        do "$root/code/tables/2_table_a8.do"
-        do "$root/code/tables/2_table_a9.do"
-        // INFO: Orginially named 'learning growth rates.do'
-        do "$root/code/tables/2_table_a10.do"
-        // INFO: Originally from "balance.do"
-        do "$root/code/tables/2_table_a11.do"
-    }
-
 
     if `new_tables' == 1 {
-        do "$root/code/tables/2_helper.do"
-        do "$root/code/tables/2_growth_cutoff_change_hetero_comp.do"
-        do "$root/code/tables/2_growth_cutoff_change_hetero_eng.do"
-        do "$root/code/tables/2_growth_cutoff_change_full.do"
-        do "$root/code/tables/2_growth_two_day_temp_lag_change.do"
-        do "$root/code/tables/2_productivity_temp_lag_change.do"
-        do "$root/code/tables/2_table_a7_lags.do"
-        do "$root/code/tables/2_table_a6_computer.do"
-        do "$root/code/tables/2_growth_two_day_temp_lag.do"
-        do "$root/code/tables/2_growth_two_day_temp_lag_english.do"
-        do "$root/code/tables/2_growth_placebo.do"
-        do "$root/code/tables/2_growth_two_day_temp_lead.do"
-        do "$root/code/tables/2_productivity_lag.do"
+        //run_dofiles "$root/code/old_draft"
     }
 
-    if `slides' == 1 {
-        do "$root/code/tables/2_helper.do"
-        do "$root/code/tables/slide/2_table_absenteeism.do"
-        do "$root/code/tables/slide/2_growth_robustness.do"
-        do "$root/code/tables/slide/2_growth_robustness_heat.do"
-        do "$root/code/tables/slide/2_growth_placebo.do"
-        do "$root/code/tables/slide/2_growth_lead.do"
-        do "$root/code/tables/slide/2_growth_hetero_one.do"
-        do "$root/code/tables/slide/2_growth_hetero.do"
-        do "$root/code/tables/slide/2_growth_hetero_age_edu.do"
-        do "$root/code/tables/slide/2_productivity.do"
-        do "$root/code/tables/slide/2_productivity_daily.do"
-        do "$root/code/tables/slide/2_productivity_heat.do"
-        do "$root/code/tables/slide/2_productivity_pollution.do"
-        do "$root/code/figures/slides/2_figure_heterogeniety.do"
-        do "$root/code/figures/slides/2_figure_heterogeniety_others.do"
-        do "$root/code/figures/slides/2_figure_temperature.do"
-        do "$root/code/figures/slides/2_figure_quantiles.do"
-        do "$root/code/figures/slides/2_figure_quantiles_cog.do"
+    if `new_figures' == 1 {
+        //run_dofiles "$root/code/old_draft"
+    }
+    
+
+    if `old_draft' == 1 {
+        run_dofiles $root/code/old_draft
     }
 
     if `other' == 1 {
-        do "$root/code/other/3_split_pick.do"
-        do "$root/code/other/3_split_pick_pid.do"
+        run_dofiles $root/code/other
     }
 
-
+    

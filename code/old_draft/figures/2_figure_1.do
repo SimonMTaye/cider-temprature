@@ -10,8 +10,6 @@ Modified By:	Simon Taye
 ****************************************************************/
 	* learning figure
 	
-
-clear all 
 use "$data/generated/hi_analysis_daily.dta", clear 
 	
 	*bysort pid: gen temp_output = m_quality_output if day_in_study==1

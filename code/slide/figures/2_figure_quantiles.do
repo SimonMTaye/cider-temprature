@@ -8,9 +8,11 @@ Author:		Isadora Frankenthal
 Modified By:	Simon Taye
 ****************************************************************
 ****************************************************************/
-clear all 
 use "$data/generated/hi_analysis_daily.dta", clear 
 	
+	forvalues i=1/6 {
+		local lags `lags' l`i'_temperature_c 
+	}
 	* create temperature bins
 	xtile temp_q = temperature_c, nq(4)
 	gen bin1 = 1 if temp_q==1
@@ -26,7 +28,7 @@ use "$data/generated/hi_analysis_daily.dta", clear
 	replace bin4=0 if bin4==. & temperature_c!=. 
 	
 	
-	reghdfe m_quality_output bin2 bin3 bin4, absorb(pid day_in_study month#year) cluster(pid)
+	reghdfe m_quality_output bin2 bin3 bin4 `lags', absorb(pid day_in_study month#year) cluster(pid)
 	
 	* store regression coefficents in variables for plotting
 	gen beta_2 = .
@@ -61,9 +63,9 @@ use "$data/generated/hi_analysis_daily.dta", clear
 		(scatter beta_2 x_2, mcolor(emerald)), ///  
 		ytitle("Coefficient Estimate") legend(off) yline(0,lcolor(black) lpattern(dash)) /// 
 		xtitle(" ") xscale(r(0.7 4.2) titlegap(4)) xlabel(1 "Under 27°C" 2 "27-29.75°C" 3 "29.75-33.45°C" 4 "Above 33.45°C") /// 
-		xtitle("Temperature Quartiles") yscale(r(-200(50)50) titlegap(-1.5)) ylabel(-200(50)50) plotregion(margin(right)) 
+		xtitle("Temperature Quartiles") yscale(r(-250(50)50) titlegap(-1.5)) ylabel(-250(50)50) plotregion(margin(right)) 
 
-	graph export "$output/figures/figure_a2.pdf", replace
+	graph export "$output/figures/figure_quantiles_slide.pdf", replace
 	
 	
 	

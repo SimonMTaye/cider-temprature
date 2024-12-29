@@ -12,7 +12,6 @@ Modified By:	Simon Taye
 use "$data/generated/hi_analysis_daily.dta", clear 
 
 	eststo clear
-	// TODO Fix scalar formatting
 
 	reghdfe cognitive_index temperature_c, absorb(pid day_in_study month#year) cluster (pid) 
 		sum cognitive_index if e(sample)==1

@@ -42,7 +42,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
     // First half with one lag
     local condition_3 `base_condition'
-    local indep_var_3   `temp_var' l1_`temp_var'  l2_`temp_var'
+    local indep_var_3   `temp_var' l1_`temp_var'  
     local dep_var_lag_3 "No"
 
     // First half with one lag and lag dep
@@ -52,13 +52,24 @@ use "$data/generated/hi_analysis_twoday.dta", clear
 
     // First half with three lag
     local condition_5 `base_condition'
-    local indep_var_5   `temp_var' l1_`temp_var' l2_`temp_var' l3_`temp_var'
+    local indep_var_5   `temp_var' l1_`temp_var' l2_`temp_var' 
     local dep_var_lag_5 "No"
 
     // First half with three lag and lag dep
     local condition_6 `base_condition'
     local indep_var_6   `indep_var_5' l_growth_quality_output_two_days
     local dep_var_lag_6 "Yes"
+
+    // First half with three lag
+    local condition_7 `base_condition'
+    local indep_var_7   `temp_var' l1_`temp_var' l2_`temp_var' l3_`temp_var'
+    local dep_var_lag_7 "No"
+
+    // First half with three lag and lag dep
+    local condition_8 `base_condition'
+    local indep_var_8   `indep_var_7' l_growth_quality_output_two_days
+    local dep_var_lag_8 "Yes"
+
 
     /* 4 lag
     local condition_7 `base_condition'
@@ -71,21 +82,17 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local dep_var_lag_8 "Yes"
     */
 
-    // 3 lag + hrs_of_work_control
+    /* 3 lag + hrs_of_work_control
     local condition_7 `base_condition'
     local indep_var_7   `indep_var_6' hrs_of_work 
     local dep_var_lag_7 "Yes"
-
-
-
-
-
+    */
 
     // Macros for storing custom row to display coefficient sum
     local sum_row " \\ [-1.7ex] Sum of Temperature Coefficents& "
     local pval_row ""
 
-    forvalues i=1/6 {
+    forvalues i=1/8 {
         reghdfe `dep_var' `indep_var_`i'' if `condition_`i'', `se_spec' 
             summ `dep_var' if e(sample) == 1 
             estadd scalar mean = r(mean) 
@@ -119,7 +126,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     local custom_row "`sum_row' \\ `pval_row' \\ \hline \\ [-1.7ex]"
 
     * Output table
-    table_header  "Dependent Variable: \textbf{Productivity Growth}" 6
+    table_header  "Dependent Variable: \textbf{Productivity Growth}" 8
     local header prehead(`r(header_macro)')
 
         // Cutting r2 from the table since it not consistent within the two panels
