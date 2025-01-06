@@ -25,7 +25,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
         local dep_var growth_quality_output_two_days
         local se_spec absorb(pid two_days month#year) cluster(pid)
 
-        local temp_var temp_c_two_days_workday
+        local temp_var workday_temp_c_two_days
         local indep_vars  `temp_var' l1_temp_c_two_days l2_temp_c_two_days l3_temp_c_two_days 
         local indep_vars_lag `indep_vars' l_growth_quality_output_two_days
         local base_condition two_days>2
