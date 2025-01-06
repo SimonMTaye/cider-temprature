@@ -52,7 +52,7 @@ set scheme eop
 
 // Flags for running cdoe
 //      cleaning_dos generates generated data from raw data
-local cleaning_dos      0
+local cleaning_dos      1
 //      generate figures and tables used in slides (2024-11)
 local slides            1
 // run other code
@@ -69,7 +69,7 @@ local new_figures       1
     if `cleaning_dos' == 1 {
         do "$root/code/clean/1_01_temp.do"
         do "$root/code/clean/1_02_join_temp_prod.do"
-        do "$root/code/clean/1_03_merge_lags_baseline.do"
+        do "$root/code/clean/1_03_merge_baseline_gen_lags.do"
         do "$root/code/clean/1_04_merge_pollution.do"
         do "$root/code/clean/1_05_intermediate_vars.do"
         do "$root/code/clean/1_06_merge_cog_ab.do"
@@ -82,7 +82,7 @@ local new_figures       1
     }
 
     if `new_tables' == 1 {
-        //run_dofiles "$root/code/old_draft"
+        run_dofiles $root/code/tables
     }
 
     if `new_figures' == 1 {

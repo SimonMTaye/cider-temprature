@@ -58,7 +58,7 @@ preserve
 			(scatter m_quality_output_rel day_in_study if computer==0, color(eltblue))  ///
 			(qfit m_quality_output_rel day_in_study if computer==0, lwidth(medium) color(eltblue))  ///
 			(scatter m_quality_output_rel day_in_study if computer==1, color(navy))  ///
-			(qfit m_quality_output_rel day_in_study if computer==1, color(navy)), name(test) ///
+			(qfit m_quality_output_rel day_in_study if computer==1, color(navy)), ///
 			ytitle(Output Relative to First Day) xscale(r(1(1)28)) xlabel(2(2)28) ylabel(1(1)5) ylabel(1(1)5) yscale(r(1(1)5)) ///
 			legend(label(1 "No prior computer experience") label(2) label(3 "Prior computer experience") label(4) order(1 3) rows(1) size(medlarge)) ///
 		
