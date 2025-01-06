@@ -36,7 +36,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
         gen ld`i'_heat_index_two_days = (ld`j'_heat_index + ld`k'_heat_index)/2
     }
 
-        
     /* Computer related code 
     a23: Have you used a computer before?
     a24: How profficent are you
@@ -64,19 +63,13 @@ use "$data/generated/hi_analysis_daily.dta", clear
 
     gen first_half = day_in_study <= 14
 
-    * mean output/temp every two days 
-    egen quality_output_two_days = mean(m_quality_output), by(pid two_days)
-    egen temp_c_two_days = mean(temperature_c), by(pid two_days)
-    egen workday_temp_c_two_days = mean(workday_temperature_c), by(pid two_days)
-    egen heat_index_two_days = mean(heat_index), by(pid two_days)
-
-
 save "$data/generated/hi_analysis_daily.dta", replace
 
     * Generate two-day period dta
-    collapse first_half quality_output_two_days temp_c_two_days workday_temp_c_two_days heat_index_two_days l* ///
-             (firstnm) max_absents computer english age_m edu_m month year  ///
-             (sum) hrs_of_work hours_working, by(pid two_days)
+    collapse    first_half quality_output_two_days=m_quality_output temp_c_two_days=temperature_c  ///
+                workday_temp_c_two_days=workday_temperature_c heat_index_two_days=heat_index l* ///
+                (firstnm) max_absents computer english age_m edu_m month year  ///
+                (sum) hrs_of_work hours_working, by(pid two_days)
 
     forvalues i=1/5 {
         label var l`i'_temp_c_two_days "Lag `i' of Temperature"
