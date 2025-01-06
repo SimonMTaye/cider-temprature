@@ -33,7 +33,7 @@ use "$data/generated/hi_analysis_twoday.dta", clear
     
 
     forvalues i=0/5 {
-        local indep_var `temp_var'
+        local indep_var `temp_var' l_`dep_var'
         // Add j number of lags
         forvalues j=1/`i' {
             local indep_var `indep_var' l`j'_`temp_var'
