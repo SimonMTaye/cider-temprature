@@ -44,12 +44,14 @@ use "$data/generated/hi_analysis_twoday.dta", clear
             * store number of observations
             estadd scalar num_obs = e(N)
             * store lagged exists indicator
-            estadd local dep_var_lag = "`dep_var_lag_`i''"
+            estadd local dep_var_lag = "Yes"
             * Store sum of temp coeffcients and p-value 
             eststo model_`i'
             local coeff_sum
             foreach var in `indep_var' {
-                local coeff_sum `coeff_sum' _b[`var'] + 
+                if "`var'" != "l_`dep_var'" {
+                    local coeff_sum `coeff_sum' _b[`var'] + 
+                }
             }
             local coeff_sum `coeff_sum' 0
             test  `coeff_sum' = 0 
