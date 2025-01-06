@@ -23,19 +23,6 @@ use "$data/generated/hi_analysis_daily.dta", clear
     gen learning_half = day_in_study < 17
     label var learning_half "Dummy indicating whether we are in period where learning happens or not"
 
-    * generate two day lags and leads, taking average over the past two days
-    forvalues i=1/5 {
-        local j = (`i' * 2) 
-        local k = `j' - 1
-        gen l`i'_temp_c_two_days = (l`j'_temperature_c + l`k'_temperature_c)/2
-        gen ld`i'_temp_c_two_days = (ld`j'_temperature_c + ld`k'_temperature_c)/2
-        gen l`i'_workday_temp_c_two_days = (l`j'_workday_temperature_c + l`k'_workday_temperature_c)/2
-        gen ld`i'_workday_temp_c_two_days = (ld`j'_workday_temperature_c + ld`k'_workday_temperature_c)/2
-
-        gen l`i'_heat_index_two_days = (l`j'_heat_index + l`k'_heat_index)/2
-        gen ld`i'_heat_index_two_days = (ld`j'_heat_index + ld`k'_heat_index)/2
-    }
-
     /* Computer related code 
     a23: Have you used a computer before?
     a24: How profficent are you
@@ -71,12 +58,25 @@ save "$data/generated/hi_analysis_daily.dta", replace
                 (firstnm) max_absents computer english age_m edu_m month year  ///
                 (sum) hrs_of_work hours_working, by(pid two_days)
 
+    xtset pid two_days
+    // Generate lags
     forvalues i=1/5 {
+        gen l`i'_temp_c_two_days  = L`i'.temp_c_two_days
         label var l`i'_temp_c_two_days "Lag `i' of Temperature"
+
+        gen ld`i'_temp_c_two_days = F`i'.temp_c_two_days
         label var ld`i'_temp_c_two_days "Lead `i' of Temperature"
+
+        gen l`i'_workday_temp_c_two_days = L`i'.workday_temp_c_two_days 
         label var l`i'_workday_temp_c_two_days "Lag `i' of Temperature"
+        
+        gen ld`i'_workday_temp_c_two_days = F`i'.workday_temp_c_two_days 
         label var ld`i'_workday_temp_c_two_days "Lead `i' of Temperature"
+
+        gen l`i'_heat_index_two_days = L`i'.heat_index_two_days
         label var l`i'_heat_index_two_days "Lag `i' of Heat Index"
+
+        gen ld`i'_heat_index_two_days = F`i'.heat_index_two_days
         label var ld`i'_heat_index_two_days "Lead `i' of Heat Index"
     }
 
